@@ -18,14 +18,6 @@
 
 using std::string;
 
-
-/*   lol so much stuff 
-	need to add the stuff and finish the stuff in the export folder and
-	move the new stuff and add a folder for the testing items i have.
-*/
-
-
-
 int _tmain(int argc, _TCHAR* argv[])
 {
 	try
