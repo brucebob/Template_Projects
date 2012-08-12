@@ -93,6 +93,6 @@ namespace TestSuite
 
 #define TEST_CONDITION(cond)								\
 	if(!(cond)) 												\
-{															\
-	throw TestSuite::Error(#cond, __FILE__, __LINE__ );		\
-}
+	{															\
+		throw TestSuite::Error(#cond, __FILE__, __LINE__ );		\
+	}

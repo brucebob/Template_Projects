@@ -2,7 +2,10 @@
 
 #include <vector>
 #include <exception>
-
+/*
+*	SortedList
+*	To Use this list on non-Primitives you need to over load the < > ==
+*/
 template<typename T> class SortedList
 {
 private:
@@ -206,7 +209,7 @@ public:
 			return nullptr;
 		}
 	}
-	void remove(const unsigned int& spot)
+	void remove(const unsigned int spot)
 	{
 		if(spot < _list.size())
 		{

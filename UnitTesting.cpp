@@ -5,7 +5,25 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+TEST_ADD(SortedList_Removal)
+{
+	std::vector<int> list1;
+	std::vector<int> list2;
+	SortedList<int> mainList;
+	for(unsigned int x = 1; x < 10; x += 2)
+	{
+		list1.push_back(x);
+		mainList.add(x);
+	}
+	for(unsigned int x = 0; x < 10; x += 2)
+	{
+		list2.push_back(x);
+		mainList.add(x);
+	}
 
+	std::reverse(list2.begin(),list2.end());
+
+}
 TEST_ADD(SortedList_MergeTest)
 {
 	SortedList<int> list1;
