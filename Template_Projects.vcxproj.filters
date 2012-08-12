@@ -45,6 +45,9 @@
     <ClInclude Include="Exports\OldList.h">
       <Filter>Exports</Filter>
     </ClInclude>
+    <ClInclude Include="TreapTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Template_Projects.cpp">
@@ -64,6 +67,9 @@
     </ClCompile>
     <ClCompile Include="Exports\TresTree.cpp">
       <Filter>Exports</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitTesting.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
