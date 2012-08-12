@@ -117,7 +117,7 @@ public:
 		}
 		_list.insert(_list.begin() + start, t);	
 	}
-	// binary search
+	// binary search: Since the list is already sorted so it can
 	template<typename TT>
 	const int positionOf(const TT& t)
 	{
