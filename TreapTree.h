@@ -13,16 +13,31 @@ private:
 		struct Node<T>* left;
 		struct Node<T>* right;
 		struct Node<T>* parent;
+		T t;
 		int priority;
 	};
+
+	Node<T> tree;
+	Node<T> makeNode(const T& t;)
+	{
+		Node<T>* newNode;
+		newNode->t = t;
+		newNode->parent = nullptr;
+		newNode->right = nullptr;
+		newNode->left = nullptr;
+	}
 public:
 	~TreapTree()
 	{
+		if(tree != nullptr)
+		{
+			// need to remove stuff
 
+		}
 	}
 	TreapTree()
 	{
-
+		tree = nullptr;
 	}
 	TreapTree(const TreapTree& treeIn)
 	{
@@ -34,7 +49,14 @@ public:
 	}
 	void add(const T && t)
 	{
+		if(tree == nullptr)
+		{
+			tree = newNode(t);
+		}
+		else
+		{
 
+		}
 	}
 	void add(const T& t)
 	{

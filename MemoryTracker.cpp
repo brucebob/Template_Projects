@@ -21,6 +21,7 @@ void MemoryTracker::FirstState()
 void MemoryTracker::SecondState()
 {
 	_CrtMemCheckpoint( &s2 );
+	differState();
 }
 void MemoryTracker::Print( std::ostream& out )
 {
@@ -32,8 +33,6 @@ std::string MemoryTracker::Print()
 	std::stringstream st;
 	const unsigned int TotalBlocks = 5;
 	const char* states[TotalBlocks] = {"Free", "Normal", "CRT", "Ignore", "Client"};
-	differState();
-	
 	
 	for (unsigned int block = 0; block < TotalBlocks; block++)
 	{

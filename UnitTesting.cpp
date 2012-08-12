@@ -1,10 +1,46 @@
 #include "TestSuite.h"
+#include "MemoryTracker.h"
 
 #include "List.h"
 #include <iostream>
 #include <vector>
 #include <string>
 #include <algorithm>
+
+#include "Exports\BSTree.h"
+TEST_ADD(BSTree_addElements)
+{
+	std::vector<int> vList;
+	BSTree<int> bsTree;
+	for(int x = 0; x < 100; x++)
+	{
+		int y = (rand() % 5000) - 2500;
+		vList.push_back(y);
+		bsTree.add(y);
+	}
+
+	for(unsigned int x = 0; x < 10; x++)
+	{
+		TEST_CONDITION(bsTree.FindElement(vList[x]) != nullptr);
+	}
+}
+TEST_ADD(BSTree_memLeak)
+{
+	MemoryTracker memTrace;
+	memTrace.FirstState();
+	BSTree<int>* bsTree = new BSTree<int>();
+	for(int x = 0; x < 100; x++)
+	{
+		int y = (rand() % 5000) - 2500;
+		bsTree->add(y);
+	}
+	delete bsTree;
+	memTrace.SecondState();
+	int x = memTrace.NormalBlocks();
+	TEST_CONDITION(memTrace.NormalBlocks() == 0);
+}
+
+// list tests
 TEST_ADD(SortedList_Removal)
 {
 	std::vector<int> list1;
@@ -71,7 +107,7 @@ TEST_ADD(SortedList_SortedElements)
 		sList.add(y);
 	}
 	std::sort(vList.begin(), vList.end());
-	for(int x = 0; x < vList.size(); x++)
+	for(unsigned int x = 0; x < vList.size(); x++)
 	{
 		TEST_CONDITION(vList[x] == sList[x]);
 	}

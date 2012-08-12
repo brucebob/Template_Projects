@@ -14,6 +14,10 @@ public:
 	void FirstState();
 	void SecondState();
 	void Print(std::ostream& out);
+	int NormalBlocks()
+	{
+		return s3.lSizes[1];
+	}
 	std::string Print();
 	MemoryTracker();
 	~MemoryTracker();
