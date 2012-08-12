@@ -4,8 +4,7 @@
 
 MemoryTracker::MemoryTracker()
 {
-	
-	s1.pBlockHeader = s2.pBlockHeader = NULL;
+	s1.pBlockHeader = s2.pBlockHeader = s3.pBlockHeader= NULL;
 }
 
 
@@ -51,6 +50,65 @@ void MemoryTracker::differState()
 	if(s1.pBlockHeader != NULL && s2.pBlockHeader != NULL)
 	{
 		_CrtMemDifference(&s3, &s1, &s2);
+	}
+	else
+	{
+		throw std::exception("MemoryTracker: Check state of either first or second was not used.\n");
+	}
+}
+int MemoryTracker::NormalBlocks()
+{
+	if(s3.pBlockHeader != nullptr)
+	{
+		return s3.lSizes[1];
+	}
+	else
+	{
+		throw std::exception("MemoryTracker: Check state of either first or second was not used.\n");
+	}
+}
+
+int MemoryTracker::FreeBlocks()
+{
+	if(s3.pBlockHeader != nullptr)
+	{
+		return s3.lSizes[0];
+	}
+	else
+	{
+		throw std::exception("MemoryTracker: Check state of either first or second was not used.\n");
+	}
+}
+
+int MemoryTracker::CRTBlocks()
+{
+	if(s3.pBlockHeader != nullptr)
+	{
+		return s3.lSizes[2];
+	}
+	else
+	{
+		throw std::exception("MemoryTracker: Check state of either first or second was not used.\n");
+	}
+}
+
+int MemoryTracker::IgnoreBlocks()
+{
+	if(s3.pBlockHeader != nullptr)
+	{
+		return s3.lSizes[3];
+	}
+	else
+	{
+		throw std::exception("MemoryTracker: Check state of either first or second was not used.\n");
+	}
+}
+
+int MemoryTracker::ClientBlocks()
+{
+	if(s3.pBlockHeader != nullptr)
+	{
+		return s3.lSizes[4];
 	}
 	else
 	{
