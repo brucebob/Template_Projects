@@ -153,6 +153,11 @@ public:
 
 		}
 	}
+	template<typename TT>
+	bool removeElement(const TT& t)
+	{
+		
+	}
 };
 
 
