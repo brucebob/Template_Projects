@@ -11,6 +11,7 @@
 #include "List.h"
 #include "TreapTree.h"
 
+// using the class for complex add tests
 class testingClass
 {
 private:
@@ -33,8 +34,6 @@ TEST_ADD(TreapTree_AddElements)
 {
 
 }
-
-
 // Binary Tree Unit Testing 
 TEST_ADD(BSTree_AddComplexElements)
 {
@@ -53,7 +52,7 @@ TEST_ADD(BSTree_AddPrimativeElements)
 
 	for(unsigned int x = 0; x < 10; x++)
 	{
-		TEST_CONDITION(bsTree.FindElement(vList[x]) != nullptr);
+		TEST_CONDITION(bsTree.findElement(vList[x]) != nullptr);
 	}
 }
 TEST_ADD(BSTree_memLeak)
@@ -70,7 +69,6 @@ TEST_ADD(BSTree_memLeak)
 	memTrace.SecondState();
 	TEST_CONDITION(memTrace.NormalBlocks() == 0);
 }
-
 // Sorted List unit testing
 TEST_ADD(SortedList_MemLeak)
 {

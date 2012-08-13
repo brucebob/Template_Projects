@@ -122,14 +122,13 @@ public:
 	{
 
 	}
-	/*
 	void find(const T& t)
 	{
 
 	}
-	template typename<TT>
+	template<typename TT>
 	void find(const TT& t)
 	{
 
-	}*/
+	}
 };
