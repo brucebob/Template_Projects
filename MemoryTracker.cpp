@@ -4,7 +4,7 @@
 
 MemoryTracker::MemoryTracker()
 {
-	s1.pBlockHeader = s2.pBlockHeader = s3.pBlockHeader= NULL;
+	s1.pBlockHeader = s2.pBlockHeader = NULL;
 }
 
 
@@ -15,14 +15,14 @@ MemoryTracker::~MemoryTracker(void)
 
 void MemoryTracker::FirstState()
 {
-	_CrtMemCheckpoint( &s1 );
+	_CrtMemCheckpoint(&s1);
 }
 void MemoryTracker::SecondState()
 {
-	_CrtMemCheckpoint( &s2 );
+	_CrtMemCheckpoint(&s2);
 	differState();
 }
-void MemoryTracker::Print( std::ostream& out )
+void MemoryTracker::Print(std::ostream& out)
 {
 	out << Print();
 }
@@ -58,7 +58,7 @@ void MemoryTracker::differState()
 }
 int MemoryTracker::NormalBlocks()
 {
-	if(s3.pBlockHeader != nullptr)
+	if(s3.pBlockHeader == nullptr)
 	{
 		return s3.lSizes[1];
 	}
@@ -70,7 +70,7 @@ int MemoryTracker::NormalBlocks()
 
 int MemoryTracker::FreeBlocks()
 {
-	if(s3.pBlockHeader != nullptr)
+	if(s3.pBlockHeader == nullptr)
 	{
 		return s3.lSizes[0];
 	}
@@ -82,7 +82,7 @@ int MemoryTracker::FreeBlocks()
 
 int MemoryTracker::CRTBlocks()
 {
-	if(s3.pBlockHeader != nullptr)
+	if(s3.pBlockHeader == nullptr)
 	{
 		return s3.lSizes[2];
 	}
@@ -94,7 +94,7 @@ int MemoryTracker::CRTBlocks()
 
 int MemoryTracker::IgnoreBlocks()
 {
-	if(s3.pBlockHeader != nullptr)
+	if(s3.pBlockHeader == nullptr)
 	{
 		return s3.lSizes[3];
 	}
@@ -106,7 +106,7 @@ int MemoryTracker::IgnoreBlocks()
 
 int MemoryTracker::ClientBlocks()
 {
-	if(s3.pBlockHeader != nullptr)
+	if(s3.pBlockHeader == nullptr)
 	{
 		return s3.lSizes[4];
 	}

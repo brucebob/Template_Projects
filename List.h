@@ -3,8 +3,9 @@
 #include <vector>
 #include <exception>
 /*
-*	SortedList
-*	To Use this list on non-Primitives you need to over load the < > ==
+*	SortedList<T>
+*	To Use this list on non-Primitives you need to overload the < > of the class
+*   for it to be able to sort the elements T
 */
 template<typename T> class SortedList
 {
@@ -19,6 +20,7 @@ public:
 	{
 
 	}
+	// takes in a vector<T> and sorts it's data content to a SortedList<T>
 	SortedList<T>(const std::vector<T>& vList)
 	{
 		for(std::vector<T>::const_iterator itor = vList.cbegin(); itor != vList.cend(); itor++)
@@ -26,6 +28,7 @@ public:
 			add(*itor);
 		}
 	}
+	// copy constructor of a vector<T> 
 	const SortedList& operator=(const std::vector<T>& vList)
 	{
 		_list.clear();
@@ -35,10 +38,12 @@ public:
 		}
 		return *this;
 	}
+	// copy constructor
 	SortedList<T>(const SortedList& listIn)
 	{
 		_list = listIn._list;
 	}
+	// copy constructor
 	const SortedList& operator=(const SortedList& listIn)
 	{
 		if(this != &listIn)
@@ -47,6 +52,8 @@ public:
 		}
 		return *this;
 	}
+	// returns a ref value of the point at spot
+	// throw if out of bounds
 	T& operator[](unsigned int spot)
 	{
 		if(spot < _list.size())
@@ -58,6 +65,8 @@ public:
 			throw std::out_of_range("Number inputed is out of range.");
 		}
 	}
+	// returns a const ref value at point spot
+	// throws if out of bounds
 	const T& operator[](unsigned int spot) const
 	{
 		if(spot < _list.size())
@@ -69,12 +78,15 @@ public:
 			throw std::out_of_range("Number inputed is out of range.");
 		}
 	}
+	// empties the list to 0 elements
 	void clear()
 	{
 		_list.clear();
 	}
+	// takes in a r value ref and adds it to the container
 	void add(T && t)
 	{
+		// use binary search to find where the next element should be inserted keeps it O(log(n))
 		unsigned int start = 0, end = _list.size();
 		while(start < end)
 		{
@@ -95,8 +107,10 @@ public:
 		}
 		_list.insert(_list.begin() + start, t);
 	}
+	// takes a const T and adds it to the container
 	void add(const T& t)
 	{
+		// use binary search to find where the next element should be inserted keeps it O(log(n))
 		unsigned int start = 0, end = _list.size();
 		while(start < end)
 		{
@@ -117,7 +131,8 @@ public:
 		}
 		_list.insert(_list.begin() + start, t);	
 	}
-	// binary search: Since the list is already sorted so it can
+	// uses binary search to find the element needed returns position if found
+	// returns -1 if not found 
 	template<typename TT>
 	const int positionOf(const TT& t)
 	{
@@ -127,6 +142,7 @@ public:
 		}
 		else
 		{
+			// uses binary search to find the element T
 			unsigned int start = 0;
 			unsigned int end = _list.size();
 			while(start < end)
@@ -148,6 +164,7 @@ public:
 			return -1;
 		}
 	}
+	// takes in a SortedList and empties the list after it's been added
 	void merge(SortedList<T>& t)
 	{
 		std::vector<T> newList;		
@@ -180,36 +197,18 @@ public:
 		t.clear();
 		_list = newList;
 	}
-	template<typename TT>
-	T* find(const TT& t)
+	// takes vector<T> and adds it to Sorted List and clears the vector
+	void merge(std::vector<T>& t)
 	{
-		if(_list.empty())
+		for(std::vector<T>::iterator itor = t.begin(); itor != t.end(); itor++)
 		{
-			return nullptr;
+			add(*itor);
 		}
-		else
-		{
-			unsigned int start = 0, end = _list.size();
-			while(start < end)
-			{
-				unsigned int mid = (end + start) / 2;
-				if(_list[mid] > t)
-				{
-					end = mid;
-				}
-				else if(_list[mid] < t)
-				{
-					start = mid + 1;
-				}
-				else
-				{
-					return &_list[mid];
-				}
-			}
-			return nullptr;
-		}
+		t.clear();
 	}
-	void remove(const unsigned int spot)
+	// remove a element at index spot
+	// throws if out of bounds
+	void removeAtIndex(const unsigned int spot)
 	{
 		if(spot < _list.size())
 		{
@@ -217,27 +216,26 @@ public:
 		}
 		else
 		{
-			throw std::out_of_range("Number inputed is out of range.");
+			throw std::out_of_range("removeAtIndex: Number inputed is out of range.");
 		}
 	}
-	// should make this TT
-	void remove(const T& t)
+	// searches the Sorted List if element is found it's removed else does nothing.
+	template<typename TT>
+	void remove(const TT& t)
 	{
 		int spot = positionOf(t);
 		if(spot != -1)
 		{
 			_list.erase(_list.begin() + spot);
 		}
-		else
-		{
-			throw std::exception("This element is not contained in the List.");
-		}
 	}
-	const unsigned int size()
+	// return the size of the sorted list
+	const unsigned int size() const
 	{
 		return _list.size();
 	}
-	bool isEmpty()
+	// returns if the Sorted List is empty
+	bool isEmpty() const
 	{
 		return _list.empty();
 	}

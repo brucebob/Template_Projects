@@ -233,12 +233,6 @@ public:
 		}
 	};
 };
-/*			USING THE SORTED LIST CLASS WITH NON-PRIMITIVES
-*	for using this container with non-primitives
-*	the class must contain a friend functions of
-*	friend bool operator<(const T& T1, const T& T2);
-*	the same goes for the other comparing operators
-*/
 template <typename T>
 class SortedList: public List<T>
 {

@@ -43,7 +43,6 @@ private:
 		}
 		return nullptr;
 	}
-
 public:
 	~BSTree<T>()
 	{
