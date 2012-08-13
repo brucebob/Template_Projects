@@ -1,7 +1,0 @@
-0 bytes in 0 Free Blocks.
-0 bytes in 0 Normal Blocks.
-0 bytes in 0 CRT Blocks.
-0 bytes in 0 Ignore Blocks.
-0 bytes in 0 Client Blocks.
-Largest number used: 0 bytes.
-Total allocations: 0 bytes.

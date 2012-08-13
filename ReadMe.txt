@@ -1,40 +1,16 @@
 ========================================================================
-    CONSOLE APPLICATION : Template_Projects Project Overview
+    Template_Projects Project Overview
 ========================================================================
+	header files use to test the containers to prove that the containers are not buggy
+	TestSuite.h - used to add unit test for a container and it's functions
+	MemoryTracker.h used to keep track of news and deletes so not leaks are made
+	all tests are storred in the UnitTesting.cpp
 
-AppWizard has created this Template_Projects application for you.
-
-This file contains a summary of what you will find in each of the files that
-make up your Template_Projects application.
-
-
-Template_Projects.vcxproj
-    This is the main project file for VC++ projects generated using an Application Wizard.
-    It contains information about the version of Visual C++ that generated the file, and
-    information about the platforms, configurations, and project features selected with the
-    Application Wizard.
-
-Template_Projects.vcxproj.filters
-    This is the filters file for VC++ projects generated using an Application Wizard. 
-    It contains information about the association between the files in your project 
-    and the filters. This association is used in the IDE to show grouping of files with
-    similar extensions under a specific node (for e.g. ".cpp" files are associated with the
-    "Source Files" filter).
-
-Template_Projects.cpp
-    This is the main application source file.
-
-/////////////////////////////////////////////////////////////////////////////
-Other standard files:
-
-StdAfx.h, StdAfx.cpp
-    These files are used to build a precompiled header (PCH) file
-    named Template_Projects.pch and a precompiled types file named StdAfx.obj.
-
-/////////////////////////////////////////////////////////////////////////////
-Other notes:
-
-AppWizard uses "TODO:" comments to indicate parts of the source code you
-should add to or customize.
-
-/////////////////////////////////////////////////////////////////////////////
+========================================================================
+	This project is a list of containers 
+========================================================================
+1. SortedList - sorts elements as they are added to the container
+2. BSTree - binary tree container for fast searches
+3. TreapTree - binary tree with a balancing so leaves are not O(n)
+4. PriorityQueue - a que that can be a min or max priority que
+5. TresTree - a tree struct for chars used for fast look up of words
