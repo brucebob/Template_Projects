@@ -1,13 +1,33 @@
 #include "TestSuite.h"
 #include "MemoryTracker.h"
 
-#include "List.h"
+
 #include <iostream>
 #include <vector>
 #include <string>
 #include <algorithm>
 
 #include "Exports\BSTree.h"
+#include "List.h"
+#include "TreapTree.h"
+
+//TreapTree Unit Testing
+TEST_ADD(TreapTree_RemoveElements)
+{
+
+}
+TEST_ADD(TreapTree_MemLeak)
+{
+
+}
+TEST_ADD(TreapTree_AddElements)
+{
+
+}
+
+
+// Binary Tree Unit Testing 
+
 TEST_ADD(BSTree_addElements)
 {
 	std::vector<int> vList;
@@ -40,7 +60,11 @@ TEST_ADD(BSTree_memLeak)
 	TEST_CONDITION(memTrace.NormalBlocks() == 0);
 }
 
-// list tests
+// Sorted List unit testing
+TEST_ADD(SortedList_MemLeak)
+{
+
+}
 TEST_ADD(SortedList_Removal)
 {
 	std::vector<int> list1;
@@ -93,7 +117,7 @@ TEST_ADD(SortedList_VectorToSortedList)
 		TEST_CONDITION(sList[x] == x);
 	}
 }
-TEST_ADD(SortedList_SortedElements)
+TEST_ADD(SortedList_AddElements)
 {
 
 	int randomNum = 10;
