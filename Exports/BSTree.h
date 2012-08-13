@@ -21,6 +21,29 @@ private:
 		newNode->Left = nullptr;
 		return newNode;
 	}
+	// returns the parent of a T element node
+	Node<T>* parentOf(const Node<T>* t)
+	{
+		return nullptr;
+	}
+	template<typename TT>
+	Node<T>* parentOf(const TT& t)
+	{
+		Node<T>* transPtr = tree;
+		while(transPtr != nullptr)
+		{
+			if(transPtr->Left != nullptr)
+			{
+
+			}
+			else if(transPtr->Right != nullptr)
+			{
+
+			}
+		}
+		return nullptr;
+	}
+
 public:
 	~BSTree<T>()
 	{
@@ -124,34 +147,44 @@ public:
 	template<typename TT>
 	T* FindElement(const TT& t)
 	{
-		if(tree != nullptr)
+		Node<T>* transPtr = tree;
+		while(transPtr != nullptr)
 		{
-			Node<T>* transPtr = tree;
-			while(transPtr != nullptr)
+			if(transPtr->d > t)
 			{
-				if(transPtr->d > t)
-				{
-					transPtr = transPtr->Left;
-				}
-				else if(transPtr->d < t)
-				{
-					transPtr = transPtr->Right;
-				}
-				else
-				{
-					return &transPtr->d;
-				}
+				transPtr = transPtr->Left;
 			}
+			else if(transPtr->d < t)
+			{
+				transPtr = transPtr->Right;
+			}
+			else
+			{
+				return &transPtr->d;
+			}	
 		}
 		return nullptr;
 	}
 	template<typename TT>
 	const T* FindElement(const TT& t) const
 	{
-		if(tree != nullptr)
+		Node<T>* transPtr = tree;
+		while(transPtr != nullptr)
 		{
-
+			if(transPtr->d < t)
+			{
+				transPtr = transPtr->Right;
+			}
+			else if(transPtr->d > t)
+			{
+				transPtr = transPtr->Left;
+			}
+			else
+			{
+				return &transPtr->d;
+			}
 		}
+		return nullptr;
 	}
 	template<typename TT>
 	bool removeElement(const TT& t)
