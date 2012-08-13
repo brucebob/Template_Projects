@@ -21,28 +21,45 @@ private:
 		newNode->Left = nullptr;
 		return newNode;
 	}
-	// returns the parent of a T element node
-	Node<T>* parentOf(const Node<T>* t)
+	Node<T>* parentOf(Node<T>* root, Node<T>* node)
 	{
-		return nullptr;
-	}
-	template<typename TT>
-	Node<T>* parentOf(const TT& t)
-	{
-		Node<T>* transPtr = tree;
-		while(transPtr != nullptr)
+		if(root == nullptr)
 		{
-			if(transPtr->Left != nullptr)
+			return nullptr;
+		}
+		else
+		{
+			// The root is the parent
+			if (root->left == node || root->right == node)
 			{
-
+				return root;
 			}
-			else if(transPtr->Right != nullptr)
+			// Look in the left and the right side of the tree.
+			if (node->d < root->d)
 			{
-
+				return parentOf(root->left, node);
+			}
+			else if (node->d > root->d)
+			{
+				return parentOf(root->right, node);
 			}
 		}
 		return nullptr;
 	}
+	bool hasChild(Node<T>* node)
+	{
+		if(node->Left != nullptr || node->Right != nullptr)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	bool onlyLeftChild();
+	bool onlyRightChild();
+
 public:
 	~BSTree<T>()
 	{
@@ -144,7 +161,7 @@ public:
 		}
 	}
 	template<typename TT>
-	T* FindElement(const TT& t)
+	T* findElement(const TT& t)
 	{
 		Node<T>* transPtr = tree;
 		while(transPtr != nullptr)
@@ -165,7 +182,7 @@ public:
 		return nullptr;
 	}
 	template<typename TT>
-	const T* FindElement(const TT& t) const
+	const T* findElement(const TT& t) const
 	{
 		Node<T>* transPtr = tree;
 		while(transPtr != nullptr)
@@ -188,8 +205,18 @@ public:
 	template<typename TT>
 	bool removeElement(const TT& t)
 	{
-		
+		if(FindElement(t) != nullptr)
+		{
+			Node<T>* element = findElement(t);
+			Node<T>* parent = parentOf(element);
+			// now i need to make sure they don't drop their leafs and things
+		}
+		return false;
 	}
+	Node<T>* maxElement();
+	Node<T>* minElement();
+	const Node<T>* maxElement() const;
+	const Node<T>* minElement() const;
 };
 
 
