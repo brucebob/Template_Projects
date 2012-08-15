@@ -213,19 +213,19 @@ public:
 		}
 		return false;
 	}
-	Node<T>* maxElement()
+	T* maxElement()
 	{
 
 	}
-	Node<T>* minElement()
+	T* minElement()
 	{
 
 	}
-	const Node<T>* maxElement() const
+	const T* maxElement() const
 	{
 
 	}
-	const Node<T>* minElement() const
+	const T* minElement() const
 	{
 
 	}
