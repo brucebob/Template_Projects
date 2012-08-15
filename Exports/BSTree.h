@@ -213,10 +213,22 @@ public:
 		}
 		return false;
 	}
-	Node<T>* maxElement();
-	Node<T>* minElement();
-	const Node<T>* maxElement() const;
-	const Node<T>* minElement() const;
+	Node<T>* maxElement()
+	{
+
+	}
+	Node<T>* minElement()
+	{
+
+	}
+	const Node<T>* maxElement() const
+	{
+
+	}
+	const Node<T>* minElement() const
+	{
+
+	}
 };
 
 
