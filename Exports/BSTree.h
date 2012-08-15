@@ -13,6 +13,7 @@ private:
 		struct Node<T>* Right;
 	};
 	Node<T>* tree;
+private:
 	Node<T>* makeNode(const T& t)
 	{
 		Node<T>* newNode = new Node<T>;
@@ -57,9 +58,28 @@ private:
 			return false;
 		}
 	}
-	bool onlyLeftChild();
-	bool onlyRightChild();
-
+	bool onlyLeftChild(Node<T>* node)
+	{
+		if(node->Left != nullptr && node->Right == nullptr)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	bool onlyRightChild(Node<T>* node)
+	{
+		if(node->Right != nullptr && node->Left == nullptr)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 public:
 	~BSTree<T>()
 	{
@@ -209,26 +229,132 @@ public:
 		{
 			Node<T>* element = findElement(t);
 			Node<T>* parent = parentOf(element);
-			// now i need to make sure they don't drop their leafs and things
+			// checks to see if it's a leaf node
+			if(!hasChild(element)
+			{
+				// not the root
+				Node<T>* parent = parentOf(element);
+				if(parent != nullptr)
+				{
+					if(parent->Left == element)
+					{
+						parent->Left = nullptr;
+					}
+					else
+					{
+						parent->Right = nullptr;
+					}
+					delete element;
+				}
+				// it's the root node
+				else
+				{
+					delete element;
+				}
+			}
+			// it's not a leaf node so i must check the left and the right child
+			else
+			{
+				Node<T>* parent = parentOf(element);
+				if(onlyLeftChild(element))
+				{
+					if(parent != nullptr)
+					{
+						parent->Left = element->Left;
+					}
+					else
+					{
+						parent = element->left;
+					}
+				}
+				else if(onlyRightChild(element))
+				{
+					if(parent != nullptr)
+					{
+						parent->Right = element->Right;
+					}
+					else
+					{
+						parent = element->Right;
+					}
+				}
+				else
+				{
+					// has both left and right
+
+				}
+				delete element;
+			}
+			return true;
 		}
 		return false;
 	}
 	T* maxElement()
 	{
+		if(tree == nullptr)
+		{
+			return nullptr;
+		}
+		else
+		{
+			Node<T>* transPtr = tree;
 
+			while(transPtr->Right != nullptr)
+			{
+				transPtr = transPtr->Right;
+			}
+			return &transPtr->d;
+		}
 	}
 	T* minElement()
 	{
+		if(tree == nullptr)
+		{
+			return nullptr;
+		}
+		else
+		{
+			Node<T>* transPtr = tree;
 
+			while(transPtr->Left != nullptr)
+			{
+				transPtr = transPtr->Left;
+			}
+			return &transPtr->d;
+		}
 	}
 	const T* maxElement() const
 	{
+		if(tree == nullptr)
+		{
+			return nullptr;
+		}
+		else
+		{
+			Node<T>* transPtr = tree;
 
+			while(transPtr->Right != nullptr)
+			{
+				transPtr = transPtr->Right;
+			}
+			return &transPtr->d;
+		}
 	}
 	const T* minElement() const
 	{
+		if(tree == nullptr)
+		{
+			return nullptr;
+		}
+		else
+		{
+			Node<T>* transPtr = tree;
 
+			while(transPtr->Left != nullptr)
+			{
+				transPtr = transPtr->Left;
+			}
+			return &transPtr->d;
+		}
 	}
 };
-
-
