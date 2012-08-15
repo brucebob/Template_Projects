@@ -213,38 +213,8 @@ public:
 		}
 		return false;
 	}
-	T* maxElement()
-	{
-		if(tree == nullptr)
-		{
-			return nullptr;
-		}
-		else
-		{
-			Node<T>* transPtr = tree;
-			while(tree->Left != nullptr)
-			{
-				transPtr = transPtr->Left;
-			}
-			return &transPtr->d;
-		}
-	}
-	T* minElement()
-	{
-		if(tree == nullptr)
-		{
-			return nullptr;
-		}
-		else
-		{
-			Node<T>* transPtr = tree;
-			while(tree->Right != nullptr)
-			{
-				transPtr = transPtr->Right;
-			}
-			return &transPtr->d;
-		}
-	}
+	Node<T>* maxElement();
+	Node<T>* minElement();
 	const Node<T>* maxElement() const;
 	const Node<T>* minElement() const;
 };
