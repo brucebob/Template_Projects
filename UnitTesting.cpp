@@ -34,7 +34,20 @@ TEST_ADD(TreapTree_AddElements)
 {
 
 }
-// Binary Tree Unit Testing 
+// Binary Tree Unit Testing
+TEST_ADD(BSTree_MinAndMax)
+{
+	BSTree<int> tree;
+	SortedList<int> sList;
+	for(int x = 0; x < 50; x++)
+	{
+		int randNum = (int)rand() % 1000 - 500;
+		tree.add(randNum);
+		sList.add(randNum);
+	}
+	TEST_CONDITION(*tree.minElement() == sList[0]);
+	TEST_CONDITION(*tree.maxElement() == sList[sList.size() - 1]);
+}
 TEST_ADD(BSTree_RemoveNodes)
 {
 	
@@ -70,7 +83,6 @@ TEST_ADD(BSTree_RemoveNodes)
 	TEST_CONDITION(tree->isEmpty() == true);
 	delete tree;
 	memTrace.SecondState();
-	memTrace.Print(std::cout);
 	TEST_CONDITION(memTrace.NormalBlocks() == 0);
 }
 TEST_ADD(BSTree_AddComplexElements)
@@ -106,6 +118,32 @@ TEST_ADD(BSTree_memLeak)
 	delete bsTree;
 	memTrace.SecondState();
 	TEST_CONDITION(memTrace.NormalBlocks() == 0);
+}
+TEST_ADD(BSTree_CopyConstruct)
+{
+	BSTree<int>* firstTree = new BSTree<int>();
+	SortedList<int> sList;
+	for(int x = 0; x < 10; x++)
+	{
+		int randNum = (int)rand()% 1000 - 500;
+		firstTree->add(randNum);
+		sList.add(randNum);
+	}
+
+	const BSTree<int> secondTree(*firstTree);
+	delete firstTree;
+	for(unsigned int x = 0; x < sList.size(); x++)
+	{
+		TEST_CONDITION(sList[x] == *secondTree.findElement(sList[x]));
+	}
+
+	BSTree<int> thirdTree;
+	for(int x = 0; x < 10; x++)
+	{
+		int randNum = (int)rand()% 1000 - 500;
+		thirdTree.add(randNum);
+	}
+	thirdTree = secondTree;
 }
 // Sorted List unit testing
 TEST_ADD(SortedList_MemLeak)

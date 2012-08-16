@@ -80,7 +80,7 @@ private:
 			return false;
 		}
 	}
-	Node<T>* maxLeaf(Node<T>* node)
+	Node<T>* maxLeaf(Node<T>* node) const
 	{
 		while(node->Right != nullptr)
 		{
@@ -88,7 +88,7 @@ private:
 		}
 		return node;
 	}
-	Node<T>* minLeaf(Node<T>* node)
+	Node<T>* minLeaf(Node<T>* node) const
 	{
 		while(node->Left != nullptr)
 		{
@@ -96,7 +96,7 @@ private:
 		}
 		return node;
 	}
-	Node<T>* findNode(Node<T>* root, T t)
+	Node<T>* findNode(Node<T>* root, T t) const
 	{
 		Node<T>* transPtr = root;
 		while(transPtr != nullptr)
@@ -119,10 +119,20 @@ private:
 public:
 	~BSTree<T>()
 	{
-		if(tree != nullptr)
+		clear();
+	}
+	BSTree<T>()
+	{
+		tree = nullptr;
+	}
+	BSTree<T>(const BSTree<T>& TreeIn)
+	{
+		// need a copy of the bst struct with a BFS
+		tree = nullptr;
+		if(!TreeIn.isEmpty())
 		{
 			std::list<Node<T>*> stack;
-			stack.push_back(tree);
+			stack.push_back(TreeIn.tree);
 			while(!stack.empty())
 			{
 				Node<T>* transPtr = stack.front();
@@ -134,22 +144,43 @@ public:
 				{
 					stack.push_back(transPtr->Right);
 				}
-				delete stack.front();
+				add(transPtr->d);
 				stack.pop_front();
 			}
 		}
 	}
-	BSTree<T>()
-	{
-		tree = nullptr;
-	}
-	BSTree<T>(const BSTree<T>& TreeIn)
-	{
-		// need a copy of the bst struct with a BFS
-	}
 	const BSTree<T>& operator =(const BSTree<T>& TreeIn)
 	{
 		// need a deep copy of the pointers
+		if(this != &TreeIn)
+		{
+			// if the tree is not empty i need to remove the old tree
+			if(tree != nullptr)
+			{
+				clear();
+			}
+
+			if(!TreeIn.isEmpty())
+			{
+				// i'll need the bfs to make the new tree
+				std::list<Node<T>*> stack;
+				stack.push_back(TreeIn.tree);
+				while(!stack.empty())
+				{
+					Node<T>* transPtr = stack.front();
+					if(transPtr->Left != nullptr)
+					{
+						stack.push_back(transPtr->Left);
+					}
+					if(transPtr->Right != nullptr)
+					{
+						stack.push_back(transPtr->Right);
+					}
+					add(transPtr->d);
+					stack.pop_front();
+				}
+			}
+		}
 		return *this;
 	}
 	// needs to be copied into both adds same code but different appected par
@@ -398,6 +429,29 @@ public:
 	}
 	bool isEmpty() const 
 	{
-		return tree == nullptr ? true : false;
+		return tree == nullptr;
+	}
+	void clear()
+	{
+		if(tree != nullptr)
+		{
+			std::list<Node<T>*> stack;
+			stack.push_back(tree);
+			while(!stack.empty())
+			{
+				Node<T>* transPtr = stack.front();
+				if(transPtr->Left != nullptr)
+				{
+					stack.push_back(transPtr->Left);
+				}
+				if(transPtr->Right != nullptr)
+				{
+					stack.push_back(transPtr->Right);
+				}
+				delete stack.front();
+				stack.pop_front();
+			}
+			tree = nullptr;
+		}
 	}
 };
