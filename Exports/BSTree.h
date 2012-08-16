@@ -150,6 +150,7 @@ public:
 	const BSTree<T>& operator =(const BSTree<T>& TreeIn)
 	{
 		// need a deep copy of the pointers
+		return *this;
 	}
 	// needs to be copied into both adds same code but different appected par
 	void add(const T& elementIn)
@@ -395,7 +396,7 @@ public:
 			return &minLeaf(tree)->d;
 		}
 	}
-	bool isEmpty()
+	bool isEmpty() const 
 	{
 		return tree == nullptr ? true : false;
 	}
