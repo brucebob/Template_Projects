@@ -31,18 +31,18 @@ private:
 		else
 		{
 			// The root is the parent
-			if (root->left == node || root->right == node)
+			if (root->Left == node || root->Right == node)
 			{
 				return root;
 			}
 			// Look in the left and the right side of the tree.
 			if (node->d < root->d)
 			{
-				return parentOf(root->left, node);
+				return parentOf(root->Left, node);
 			}
 			else if (node->d > root->d)
 			{
-				return parentOf(root->right, node);
+				return parentOf(root->Right, node);
 			}
 		}
 		return nullptr;
@@ -82,19 +82,39 @@ private:
 	}
 	Node<T>* maxLeaf(Node<T>* node)
 	{
+		while(node->Right != nullptr)
+		{
+			node = node->Right;
+		}
+		return node;
+	}
+	Node<T>* minLeaf(Node<T>* node)
+	{
 		while(node->Left != nullptr)
 		{
 			node = node->Left;
 		}
 		return node;
 	}
-	Node<T>* minLeaf(Node<T>* node)
+	Node<T>* findNode(Node<T>* root, T t)
 	{
-		while(node->Right != nullptr)
+		Node<T>* transPtr = root;
+		while(transPtr != nullptr)
 		{
-			node = node->Right;
+			if(transPtr->d > t)
+			{
+				transPtr = transPtr->Left;
+			}
+			else if(transPtr->d < t)
+			{
+				transPtr = transPtr->Right;
+			}
+			else
+			{
+				return transPtr;
+			}	
 		}
-		return node;
+		return nullptr;
 	}
 public:
 	~BSTree<T>()
@@ -199,52 +219,34 @@ public:
 	template<typename TT>
 	T* findElement(const TT& t)
 	{
-		Node<T>* transPtr = tree;
-		while(transPtr != nullptr)
+		if(tree != nullptr)
 		{
-			if(transPtr->d > t)
-			{
-				transPtr = transPtr->Left;
-			}
-			else if(transPtr->d < t)
-			{
-				transPtr = transPtr->Right;
-			}
-			else
-			{
-				return &transPtr->d;
-			}	
+			return &findNode(tree, t)->d; 
 		}
-		return nullptr;
+		else
+		{
+			return nullptr;
+		}
 	}
 	template<typename TT>
 	const T* findElement(const TT& t) const
 	{
-		Node<T>* transPtr = tree;
-		while(transPtr != nullptr)
+		if(tree != nullptr)
 		{
-			if(transPtr->d < t)
-			{
-				transPtr = transPtr->Right;
-			}
-			else if(transPtr->d > t)
-			{
-				transPtr = transPtr->Left;
-			}
-			else
-			{
-				return &transPtr->d;
-			}
+			return &findNode(tree, t)->d; 
 		}
-		return nullptr;
+		else
+		{
+			return nullptr;
+		}
 	}
 	template<typename TT>
 	bool removeElement(const TT& t)
 	{
-		Node<T>* element = findElement(t);
+		Node<T>* element = findNode(tree,t);
 		if(element != nullptr)
 		{
-			Node<T>* parent = parentOf(element);
+			Node<T>* parent = parentOf(tree, element);
 			// checks to see if it's a leaf node
 			if(!hasChild(element))
 			{
@@ -264,7 +266,7 @@ public:
 				else // it's the root node with no children
 				{
 					delete element;
-					element = nullptr;
+					tree = nullptr;
 				}
 			}
 			// it's a edge node
@@ -276,23 +278,40 @@ public:
 					if(parent != nullptr)
 					{
 						parent->Left = element->Left;
+						if(parent->Left == element)
+						{
+							parent->Left = element->Left;
+						}
+						else
+						{
+							parent->Right = element->Left;
+						}
 					}
 					else
 					{
-						parent = element->left;
+						tree = element->Left;
 					}
+					delete element;
 				}
 				// only has one right child
 				else if(onlyRightChild(element))
 				{
 					if(parent != nullptr)
-					{
-						parent->Right = element->Right;
+					{			
+						if(parent->Left == element)
+						{
+							parent->Left = element->Right;
+						}
+						else
+						{
+							parent->Right = element->Right;
+						}
 					}
 					else
 					{
-						parent = element->Right;
+						tree = element->Right;
 					}
+					delete element;
 				}
 				else
 				{
@@ -306,7 +325,6 @@ public:
 					{
 						element->Left = element->Right->Left;
 					}
-					element->Right;
 					// left goes on the right's min left
 					element->Right->Left = element->Left;
 					if(parent != nullptr)
@@ -324,9 +342,8 @@ public:
 					else
 					{
 						// it's the root
-						Node<T>* temp = element->Right;
+						tree = element->Right;
 						delete element;
-						element = temp;
 					}
 				}
 			}
@@ -342,13 +359,7 @@ public:
 		}
 		else
 		{
-			Node<T>* transPtr = tree;
-
-			while(transPtr->Right != nullptr)
-			{
-				transPtr = transPtr->Right;
-			}
-			return &transPtr->d;
+			return &maxLeaf(tree)->d;
 		}
 	}
 	T* minElement()
@@ -359,13 +370,7 @@ public:
 		}
 		else
 		{
-			Node<T>* transPtr = tree;
-
-			while(transPtr->Left != nullptr)
-			{
-				transPtr = transPtr->Left;
-			}
-			return &transPtr->d;
+			return &minLeaf(tree)->d;
 		}
 	}
 	const T* maxElement() const
@@ -376,13 +381,7 @@ public:
 		}
 		else
 		{
-			Node<T>* transPtr = tree;
-
-			while(transPtr->Right != nullptr)
-			{
-				transPtr = transPtr->Right;
-			}
-			return &transPtr->d;
+			return &maxLeaf(tree)->d;
 		}
 	}
 	const T* minElement() const
@@ -393,13 +392,11 @@ public:
 		}
 		else
 		{
-			Node<T>* transPtr = tree;
-
-			while(transPtr->Left != nullptr)
-			{
-				transPtr = transPtr->Left;
-			}
-			return &transPtr->d;
+			return &minLeaf(tree)->d;
 		}
+	}
+	bool isEmpty()
+	{
+		return tree == nullptr ? true : false;
 	}
 };

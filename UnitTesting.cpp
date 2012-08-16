@@ -35,6 +35,44 @@ TEST_ADD(TreapTree_AddElements)
 
 }
 // Binary Tree Unit Testing 
+TEST_ADD(BSTree_RemoveNodes)
+{
+	
+	int arr[10] = 
+	{
+		    4,
+	   2,        6,
+	1,    3,   5,  7,
+  0,                 10,
+                  9
+
+};
+	SortedList<int> sList;
+	for(unsigned int x = 0; x < 10; x++)
+	{
+		sList.add(arr[x]);
+	}
+	
+
+	MemoryTracker memTrace;
+	memTrace.FirstState();
+
+	BSTree<int>* tree = new BSTree<int>();
+	for(unsigned int x = 0; x < 10; x++)
+	{
+		tree->add(arr[x]);
+	}
+	
+	for(unsigned int x = 0; x < sList.size(); x++)
+	{
+		TEST_CONDITION(tree->removeElement(sList[x]) == true);
+	}
+	TEST_CONDITION(tree->isEmpty() == true);
+	delete tree;
+	memTrace.SecondState();
+	memTrace.Print(std::cout);
+	TEST_CONDITION(memTrace.NormalBlocks() == 0);
+}
 TEST_ADD(BSTree_AddComplexElements)
 {
 
