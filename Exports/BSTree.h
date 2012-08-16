@@ -80,6 +80,22 @@ private:
 			return false;
 		}
 	}
+	Node<T>* maxLeaf(Node<T>* node)
+	{
+		while(node->Left != nullptr)
+		{
+			node = node->Left;
+		}
+		return node;
+	}
+	Node<T>* minLeaf(Node<T>* node)
+	{
+		while(node->Right != nullptr)
+		{
+			node = node->Right;
+		}
+		return node;
+	}
 public:
 	~BSTree<T>()
 	{
@@ -225,15 +241,14 @@ public:
 	template<typename TT>
 	bool removeElement(const TT& t)
 	{
-		if(FindElement(t) != nullptr)
+		Node<T>* element = findElement(t);
+		if(element != nullptr)
 		{
-			Node<T>* element = findElement(t);
 			Node<T>* parent = parentOf(element);
 			// checks to see if it's a leaf node
-			if(!hasChild(element)
+			if(!hasChild(element))
 			{
-				// not the root
-				Node<T>* parent = parentOf(element);
+				// it's a leaf node but not the root
 				if(parent != nullptr)
 				{
 					if(parent->Left == element)
@@ -246,16 +261,16 @@ public:
 					}
 					delete element;
 				}
-				// it's the root node
-				else
+				else // it's the root node with no children
 				{
 					delete element;
+					element = nullptr;
 				}
 			}
-			// it's not a leaf node so i must check the left and the right child
+			// it's a edge node
 			else
 			{
-				Node<T>* parent = parentOf(element);
+				// only has one left child 
 				if(onlyLeftChild(element))
 				{
 					if(parent != nullptr)
@@ -267,6 +282,7 @@ public:
 						parent = element->left;
 					}
 				}
+				// only has one right child
 				else if(onlyRightChild(element))
 				{
 					if(parent != nullptr)
@@ -281,9 +297,38 @@ public:
 				else
 				{
 					// has both left and right
-
+					// right's left goes on left's max right
+					if(element->Left != nullptr)
+					{
+						maxLeaf(element->Left)->Right = element->Right->Left;
+					}
+					else
+					{
+						element->Left = element->Right->Left;
+					}
+					element->Right;
+					// left goes on the right's min left
+					element->Right->Left = element->Left;
+					if(parent != nullptr)
+					{
+						if(parent->Left == element)
+						{
+							parent->Left = element->Right;
+						}
+						else
+						{
+							parent->Right = element->Right;
+						}
+						delete element;
+					}
+					else
+					{
+						// it's the root
+						Node<T>* temp = element->Right;
+						delete element;
+						element = temp;
+					}
 				}
-				delete element;
 			}
 			return true;
 		}
