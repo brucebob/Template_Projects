@@ -3,40 +3,77 @@
 #include <vector>
 #include <exception>
 
+
+const enum QUE_TYPE
+{
+	MIN,
+	MAX
+};
+
 template<typename T>
 class PriorityQueue
 {
 private:
 	std::vector<T> pQue;
 	// function pointer for pick min priority que or max priority que
-	bool (*funct)(const T& root, const T& node);
+	bool (PriorityQueue::*funct)(const T& root, const T& node);
+
+	
 	// the min and max compares
 	bool minCompare(const T& root, const T& node)
 	{
-		return root < node;
+		return root > node;
 	}
 	bool maxCompare(const T& root, const T& node)
 	{
-		return root > node;
+		return root < node;
 	}
-
-	void percolateUp(int spot, bool (*functors)(const T& root, const T& node))
+	void swap(T& t1, T& t2)
 	{
-		if(spot > 0 && (*functors)(pQue[(spot - 1) / 2], pQue[spot]))
+		T temp = t1;
+		t1 = t2;
+		t2 = temp;
+	}
+	void percolateUp(int index)
+	{
+		if(index > 0 && (this->*funct)(pQue[(index - 1) / 2], pQue[index]))
 		{
-			percolateUp((spot - 1) / 2, functors);
+			// need a swap
+			swap(pQue[index], pQue[(index - 1) / 2]);
+			percolateUp((index - 1) / 2);
 		}
 	}
-	void percolateDown(int spot, bool (*functors)(const T& root, const T& node))
+	void percolateDown(int index)
 	{
+		int MaxPriority = 0;
 
+		if((2 * index + 2) <= pQue.size() - 1)
+		{
+			if((this->*funct)(pQue[2 * index + 1], pQue[2 * index + 2]))
+			{
+				MaxPriority = 2 * index + 2;
+			}
+			else
+			{
+				MaxPriority = 2 * index + 1;
+			}
+
+			if((this->*funct)(pQue[index], pQue[MaxPriority]))
+			{
+				swap(pQue[index], pQue[MaxPriority]);
+				percolateDown(MaxPriority);
+			}
+
+		}
+		else if(pQue.size() - 1 == 2 * index + 1) 
+		{
+			if((this->*funct)(pQue[index], pQue[2 * index + 1])) 
+			{
+				swap(pQue[index], pQue[2 * index + 1]);
+			}
+		}
 	}
 public:
-	const static enum QUE_TYPE
-	{
-		MIN,
-		MAX
-	};
 	~PriorityQueue()
 	{
 
@@ -56,43 +93,43 @@ public:
 	}
 	PriorityQueue()
 	{
-		funct = maxCompare;
+		funct = &PriorityQueue::maxCompare;
 	}
-	PriorityQueue(enum QUE_TYPE qt)
+	PriorityQueue(QUE_TYPE qt)
 	{
 		switch(qt)
 		{
 		case MAX:
 			{
-				funct = maxCompare;
+				funct = &PriorityQueue::maxCompare;
 				break;
 			}
 		case MIN:
 			{
-				funct = minCompare;
+				funct = &PriorityQueue::minCompare;
 			}
 		}
 	}
 	void add(const T& t)
 	{
 		pQue.push_back(t);
-		percolateUp(pQue.size(), funct);
+		percolateUp(pQue.size() - 1);
 	}
 	void add(T && t)
 	{
 		pQue.push_back(t);
-		percolateUp(pQue.size(), funct);
+		percolateUp(pQue.size() - 1);
 	}
-	t& pop()
+	T pop()
 	{
-		if(!isEmpty)
+		if(!isEmpty())
 		{
 			T returner = pQue[0];
 			if(pQue.size() != 1)
 			{
 				pQue[0] = pQue[pQue.size() - 1];
 				pQue.pop_back();
-				percolateDown(0, funct);
+				percolateDown(0);
 			}
 			else
 			{
@@ -105,18 +142,18 @@ public:
 			throw std::exception("PriorityQueue: empty queue");
 		}
 	}
-	t& front() const
+	const T& front() const
 	{
-		if(!isEmpty)
+		if(!isEmpty())
 		{
-
+			return pQue[0];
 		}
 		else
 		{
 			throw std::exception("PriorityQueue: empty queue");
 		}
 	}
-	bool isEmpty()
+	bool isEmpty() const
 	{
 		return pQue.empty();
 	}

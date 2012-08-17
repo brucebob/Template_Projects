@@ -10,6 +10,8 @@
 #include "Exports\BSTree.h"
 #include "List.h"
 #include "TreapTree.h"
+#include "PriorityQueue.h"
+
 
 // using the class for complex add tests
 class testingClass
@@ -20,8 +22,43 @@ public:
 
 };
 
+// PriorityQueue Unit Testing
+TEST_ADD(PriorityQueue_MinQue)
+{
+	PriorityQueue<int> pQue  (MIN);
+	SortedList<int> sList;
+	srand(130894);
+	
+	for(unsigned int x = 0; x < 1000; x++)
+	{
+		int y = (rand() % 5000) - 2500;
+		pQue.add(y);
+		sList.add(y);
+	}
+	for(unsigned int x = 0; x < sList.size(); x++)
+	{		
+		TEST_CONDITION(pQue.pop() == sList[x]);
+	}
+}
+TEST_ADD(PriorityQueue_AddPrimitiveElements)
+{
+	PriorityQueue<int> pQue;
+	SortedList<int> sList;
+	srand(130894);
+	for(unsigned int x = 0; x < 1000; x++)
+	{
+		int y = (rand() % 5000) - 2500;
+		pQue.add(y);
+		sList.add(y);
+	}
+	
+	for(unsigned int x = sList.size(); x > 0; x--)
+	{		
+		TEST_CONDITION(pQue.pop() == sList[x - 1]);
+	}
+}
 
-//TreapTree Unit Testing
+// TreapTree Unit Testing
 TEST_ADD(TreapTree_RemoveElements)
 {
 
