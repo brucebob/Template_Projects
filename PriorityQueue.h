@@ -6,7 +6,7 @@ template<typename T>
 class PriorityQueue
 {
 private:
-	std::vector<T> que;
+	std::vector<T> pQue;
 	void perulateUp(int spot, int spot2)
 	{
 
