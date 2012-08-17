@@ -48,6 +48,9 @@
     <ClInclude Include="TreapTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PriorityQueue.h">
+      <Filter>Exports</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Template_Projects.cpp">

@@ -81,6 +81,7 @@
     <ClInclude Include="Exports\TresTree.h" />
     <ClInclude Include="List.h" />
     <ClInclude Include="MemoryTracker.h" />
+    <ClInclude Include="PriorityQueue.h" />
     <ClInclude Include="StopWatch.h" />
     <ClInclude Include="TestSuite.h" />
     <ClInclude Include="TreapTree.h" />
