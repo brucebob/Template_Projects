@@ -27,7 +27,6 @@ TEST_ADD(PriorityQueue_MinQue)
 {
 	PriorityQueue<int> pQue  (MIN);
 	SortedList<int> sList;
-	srand(130894);
 	
 	for(unsigned int x = 0; x < 1000; x++)
 	{
@@ -44,7 +43,6 @@ TEST_ADD(PriorityQueue_AddPrimitiveElements)
 {
 	PriorityQueue<int> pQue;
 	SortedList<int> sList;
-	srand(130894);
 	for(unsigned int x = 0; x < 1000; x++)
 	{
 		int y = (rand() % 5000) - 2500;
@@ -57,7 +55,29 @@ TEST_ADD(PriorityQueue_AddPrimitiveElements)
 		TEST_CONDITION(pQue.pop() == sList[x - 1]);
 	}
 }
+TEST_ADD(PriorityQueue_MemLeak)
+{
+	
+	MemoryTracker memTrace;
+	memTrace.FirstState();
+	PriorityQueue<int>* pQue = new PriorityQueue<int>();
+	for(unsigned int x = 10; x < 10; x++)
+	{
+		pQue->add(x);
+	}
+	delete pQue;
+	memTrace.SecondState();
 
+	TEST_CONDITION(memTrace.NormalBlocks() == 0);
+}
+TEST_ADD(PriorityQueue_AddComplexElements)
+{
+
+}
+TEST_ADD(PriorityQueue_CopyConstructor)
+{
+
+}
 // TreapTree Unit Testing
 TEST_ADD(TreapTree_RemoveElements)
 {
