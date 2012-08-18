@@ -3,6 +3,13 @@
 #include <vector>
 #include <exception>
 
+/*
+*		Priority Queue
+*		for complex elements must have a working 
+*		operator < > and = 
+*		since it's used to find priority and swap positions
+*/
+
 // uses this enum to pick which QUE_TYPE
 const enum QUE_TYPE
 {
@@ -84,6 +91,7 @@ private:
 		}
 	}
 public:
+	// since vector does it's own deleting nothing need to be removed
 	~PriorityQueue()
 	{
 
@@ -185,7 +193,7 @@ public:
 	}
 	// return the front of the queue 
 	// the front is immutable since it could edit the priority
-	// throws if the empty
+	// throws if empty
 	const T& front() const
 	{
 		if(!isEmpty())
