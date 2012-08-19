@@ -26,37 +26,61 @@ private:
 	Node<T>* makeNode(const T& t)
 	{
 		Node<T>* newNode;
+		if(newNode != nullptr)
+		{
 		newNode->t = t;
 		newNode->parent = nullptr;
 		newNode->right = nullptr;
 		newNode->left = nullptr;
 		priority = nextRandom();
 		return newNode;
+		}
+		else
+		{
+			throw std::bad_alloc("TreapTree: ran out of memory");
+		}
 	}
-
+	Node<T>* makeNode(const T& t, int cPriority)
+	{
+		Node<T>* newNode;
+		if(newNode != nullptr)
+		{
+			newNode->t = t;
+			newNode->parent = nullptr;
+			newNode->right = nullptr;
+			newNode->left = nullptr;
+			priority = cPriority;
+			return newNode;
+		}
+		else
+		{
+			throw std::bad_alloc("TreapTree: ran out of memory");
+		}
+	}
+	Node<T>* findNode(Node<T>* root, T t) const
+	{
+		Node<T>* transPtr = root;
+		while(transPtr != nullptr)
+		{
+			if(transPtr->d > t)
+			{
+				transPtr = transPtr->Left;
+			}
+			else if(transPtr->d < t)
+			{
+				transPtr = transPtr->Right;
+			}
+			else
+			{
+				return transPtr;
+			}	
+		}
+		return nullptr;
+	}
 public:
 	~TreapTree()
 	{
-		if(tree != nullptr)
-		{
-			// BFS to remove node by a stack.
-			std::list<Node<T>*> nodeStack;
-			nodeStack.push_back(tree);
-
-			while(!nodeStack.empty())
-			{
-				if(nodeStack.front()->left != nullptr)
-				{
-					nodeStack.push_back(nodeStack.front()->left);
-				}
-				if(nodeStack.front()->right != nullptr)
-				{
-					nodeStack.push_back(nodeStack.front()->right);
-				}
-				delete nodeStack.front();
-				nodeStack.pop_front();
-			}
-		}
+		clear();
 	}
 	TreapTree()
 	{
@@ -64,11 +88,51 @@ public:
 	}
 	TreapTree(const TreapTree& treeIn)
 	{
-
+		// need to run a bfs and then copy the prioritys
+		
+		tree = nullptr;
+		if(!isEmpty())
+		{
+			std::list<Node<T>*> stack;
+			stack.push_front(tree);
+			while(!stack.empty())
+			{
+				if(stack.front()->left != nullptr)
+				{
+					stack.push_back(stack.front()->left);
+				}
+				if(stack.front()->right != nullptr)
+				{
+					stack.push_back(stack.front()->right);
+				}
+			}
+			add(stack.front()->t, stack.front()->priority);
+			stack.pop_front();
+		}
 	}
 	const TreapTree& operator=(const TreapTree& treeIn)
 	{
-
+		clear();
+		if(!treeIn.isEmpty())
+		{
+			// need to copy the tree 
+			std::list<Node<T>*> stack;
+			stack.push_front(treeIn.tree);
+			while(!stack.empty())
+			{
+				if(stack.front()->left != nullptr)
+				{
+					stack.push_back(stack.front()->left);
+				}
+				if(stack.front()->right != nullptr)
+				{
+					stack.push_back(stack.front()->right);
+				}
+			}
+			add(stack.front()->t, stack.front()->priority);
+			stack.pop_front();
+		}
+		return *this;
 	}
 	void add(const T && t)
 	{
@@ -122,13 +186,56 @@ public:
 	{
 
 	}
-	void find(const T& t)
+	template<typename TT>
+	T* findElement(const TT& t)
 	{
-
+		if(tree != nullptr)
+		{
+			return &findNode(tree, t)->d; 
+		}
+		else
+		{
+			return nullptr;
+		}
 	}
 	template<typename TT>
-	void find(const TT& t)
+	const T* findElement(const TT& t) const
 	{
+		if(tree != nullptr)
+		{
+			return &findNode(tree, t)->d; 
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+	bool isEmpty() const
+	{
+		return tree == nullptr;
+	}
+	void clear()
+	{
+		if(!isEmpty())
+		{
+			// BFS to remove node by a stack.
+			std::list<Node<T>*> stack;
+			stack.push_back(tree);
 
+			while(!stack.empty())
+			{
+				if(stack.front()->left != nullptr)
+				{
+					stack.push_back(stack.front()->left);
+				}
+				if(stack.front()->right != nullptr)
+				{
+					stack.push_back(stack.front()->right);
+				}
+				delete stack.front();
+				stack.pop_front();
+			}
+			tree = nullptr;
+		}
 	}
 };

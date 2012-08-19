@@ -17,10 +17,17 @@ private:
 	Node<T>* makeNode(const T& t)
 	{
 		Node<T>* newNode = new Node<T>;
-		newNode->d = t;
-		newNode->Right = nullptr;
-		newNode->Left = nullptr;
-		return newNode;
+		if(newNode != nullptr)
+		{
+			newNode->d = t;
+			newNode->Right = nullptr;
+			newNode->Left = nullptr;
+			return newNode;
+		}
+		else
+		{
+			throw std::bad_alloc("BSTree: ran out of memory");
+		}
 	}
 	Node<T>* parentOf(Node<T>* root, Node<T>* node)
 	{
@@ -116,6 +123,65 @@ private:
 		}
 		return nullptr;
 	}
+	Node<T>* copyTree(Node<T>* root)
+	{
+		if(root != nullptr)
+		{
+			Node<T>* newRoot = nullptr;
+			std::list<Node<T>*> stack;
+			
+			stack.push_back(root);
+			while(!stack.empty())
+			{
+				if(stack.front()->Left != nullptr)
+				{
+					stack.push_back(stack.front()->Left);
+				}
+				if(stack.front()->Right != nullptr)
+				{
+					stack.push_back(stack.front()->Right);
+				}
+				newRoot = addElement(newRoot, stack.front()->d);
+				stack.pop_front();
+			}
+
+			return newRoot;
+		}
+		return nullptr;
+	}
+	Node<T>* addElement(Node<T>* root, const T& element)
+	{
+		if(root == nullptr)
+		{
+			return makeNode(element);
+		}
+		else
+		{
+			Node<T>* transPtr = root;
+			while(transPtr != nullptr)
+			{
+				if(transPtr->d > element)
+				{
+					if(transPtr->Left == nullptr)
+					{
+						transPtr->Left = makeNode(element);
+						return root;
+					}
+					transPtr = transPtr->Left;
+				}
+				else
+				{
+					if(transPtr->Right == nullptr)
+					{
+						transPtr->Right = makeNode(element);
+						return root;
+					}
+					transPtr = transPtr->Right;
+				}
+			}
+		}
+		return root;
+	}
 public:
 	~BSTree<T>()
 	{
@@ -127,126 +193,26 @@ public:
 	}
 	BSTree<T>(const BSTree<T>& TreeIn)
 	{
-		// need a copy of the bst struct with a BFS
-		tree = nullptr;
-		if(!TreeIn.isEmpty())
-		{
-			std::list<Node<T>*> stack;
-			stack.push_back(TreeIn.tree);
-			while(!stack.empty())
-			{
-				Node<T>* transPtr = stack.front();
-				if(transPtr->Left != nullptr)
-				{
-					stack.push_back(transPtr->Left);
-				}
-				if(transPtr->Right != nullptr)
-				{
-					stack.push_back(transPtr->Right);
-				}
-				add(transPtr->d);
-				stack.pop_front();
-			}
-		}
+		tree = copyTree(TreeIn.tree);
 	}
 	const BSTree<T>& operator =(const BSTree<T>& TreeIn)
 	{
-		// need a deep copy of the pointers
+		// need a deep copy of the pointers and nodes
 		if(this != &TreeIn)
 		{
-			// if the tree is not empty i need to remove the old tree
-			if(tree != nullptr)
-			{
-				clear();
-			}
-
-			if(!TreeIn.isEmpty())
-			{
-				// i'll need the bfs to make the new tree
-				std::list<Node<T>*> stack;
-				stack.push_back(TreeIn.tree);
-				while(!stack.empty())
-				{
-					Node<T>* transPtr = stack.front();
-					if(transPtr->Left != nullptr)
-					{
-						stack.push_back(transPtr->Left);
-					}
-					if(transPtr->Right != nullptr)
-					{
-						stack.push_back(transPtr->Right);
-					}
-					add(transPtr->d);
-					stack.pop_front();
-				}
-			}
+			clear();
+			tree = copyTree(TreeIn.tree);
 		}
 		return *this;
 	}
 	// needs to be copied into both adds same code but different appected par
 	void add(const T& elementIn)
 	{
-		if(tree == nullptr)
-		{
-			tree = makeNode(elementIn);
-		}
-		else
-		{
-			Node<T>* transPtr = tree;
-			while(transPtr != nullptr)
-			{
-				if(transPtr->d > elementIn)
-				{
-					if(transPtr->Left == nullptr)
-					{
-						transPtr->Left = makeNode(elementIn);
-						return;
-					}
-					transPtr = transPtr->Left;
-				}
-				else
-				{
-					if(transPtr->Right == nullptr)
-					{
-						transPtr->Right = makeNode(elementIn);
-						return;
-					}
-					transPtr = transPtr->Right;
-				}
-			}
-		}
+		tree = addElement(tree, elementIn);
 	}
 	void add(T && elementIn)
 	{
-		if(tree == nullptr)
-		{
-			tree = newNode(elementIn);
-		}
-		else
-		{
-			Node<T>* transPtr = tree;
-			while(transPtr != nullptr)
-			{
-				if(transPtr->d > elementIn)
-				{
-					if(transPtr->Left == nullptr)
-					{
-						transPtr->Left = newNode(elementIn);
-						return;
-					}
-					transPtr = transPtr->Left;
-				}
-				else
-				{
-					if(transPtr->Right == nullptr)
-					{
-						transPtr->Right = newNode(elementIn);
-						return;
-					}
-					transPtr = transPtr->Right;
-				}
-			}
-		}
+		tree = addElement(tree, elementIn);
 	}
 	template<typename TT>
 	T* findElement(const TT& t)
@@ -455,6 +421,32 @@ public:
 		}
 	}
 
-	// made a change
-	// made somemore
+	// going to have bi direction type iterators with a vector of *
+
+	// in order is only going to be a forward iterator
+
+	// for this to be not all the element i have to keep a list of the list till the min node and as i
+	// ++ throught make sure they don't have a right.
+	/*
+	class inOrderIterator
+	{
+	private:
+		std::vector<Node<T>*> ioiList;
+		unsigned int cSpot;
+	public:
+		
+		void operator++(int)
+		{
+			cSpot++;
+		}
+		T& operator*()
+		{
+			return ioiList[cSpot];
+		}
+		T* operator->() const
+		{
+			return &ioiList[cSpot];
+		}
+		inOrderIterator(
+	};*/
 };

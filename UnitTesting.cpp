@@ -72,7 +72,7 @@ TEST_ADD(PriorityQueue_MemLeak)
 }
 TEST_ADD(PriorityQueue_AddComplexElements)
 {
-
+	
 }
 TEST_ADD(PriorityQueue_CopyConstructor)
 {
