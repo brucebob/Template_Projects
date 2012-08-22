@@ -1,10 +1,20 @@
 #pragma once
-
 #include <list>
+
+
+/*
+*
+*		BSTree is a simple binary search tree
+*		for complex element overloads of < > are needed
+*
+*/
+
+
 template <typename T>
 class BSTree
 {
 private:
+	// the stuct of tree
 	template <typename T>
 	struct Node
 	{
@@ -14,6 +24,8 @@ private:
 	};
 	Node<T>* tree;
 private:
+	// makes the node for the tree
+	// checks to see if it runs out of memmory and throws a bad_alloc
 	Node<T>* makeNode(const T& t)
 	{
 		Node<T>* newNode = new Node<T>;
@@ -29,6 +41,9 @@ private:
 			throw std::bad_alloc("BSTree: ran out of memory");
 		}
 	}
+	// takes in two pointers one to the root and the one to the node
+	// finds the parent of node and returns it
+	// returns nullptr if it's the root node
 	Node<T>* parentOf(Node<T>* root, Node<T>* node)
 	{
 		if(root == nullptr)
@@ -54,6 +69,7 @@ private:
 		}
 		return nullptr;
 	}
+	// returns true if either left or right is not nullptr
 	bool hasChild(Node<T>* node)
 	{
 		if(node->Left != nullptr || node->Right != nullptr)
@@ -65,6 +81,7 @@ private:
 			return false;
 		}
 	}
+	// return true if only the left child is not nullptr
 	bool onlyLeftChild(Node<T>* node)
 	{
 		if(node->Left != nullptr && node->Right == nullptr)
@@ -76,6 +93,7 @@ private:
 			return false;
 		}
 	}
+	// return true if only the right child is not nullptr
 	bool onlyRightChild(Node<T>* node)
 	{
 		if(node->Right != nullptr && node->Left == nullptr)
@@ -87,6 +105,7 @@ private:
 			return false;
 		}
 	}
+	// returns the node at the far node right
 	Node<T>* maxLeaf(Node<T>* node) const
 	{
 		while(node->Right != nullptr)
@@ -95,6 +114,7 @@ private:
 		}
 		return node;
 	}
+	// returns the node on the far left
 	Node<T>* minLeaf(Node<T>* node) const
 	{
 		while(node->Left != nullptr)
@@ -103,6 +123,7 @@ private:
 		}
 		return node;
 	}
+	// returns the node based on the binary search tree property
 	Node<T>* findNode(Node<T>* root, T t) const
 	{
 		Node<T>* transPtr = root;
@@ -123,11 +144,13 @@ private:
 		}
 		return nullptr;
 	}
+	// takes in the root and makes a complete copy of the tree struct
 	Node<T>* copyTree(Node<T>* root)
 	{
 		if(root != nullptr)
 		{
 			Node<T>* newRoot = nullptr;
+			// makes a BFS to copy the nodes
 			std::list<Node<T>*> stack;
 			
 			stack.push_back(root);
@@ -149,6 +172,7 @@ private:
 		}
 		return nullptr;
 	}
+	// adds a new element to a empty child based of the binary search property
 	Node<T>* addElement(Node<T>* root, const T& element)
 	{
 		if(root == nullptr)
@@ -183,18 +207,22 @@ private:
 		return root;
 	}
 public:
+	// calls clear at the end of the scope of this class or is deleted
 	~BSTree<T>()
 	{
 		clear();
 	}
+	// sets the tree to nullptr
 	BSTree<T>()
 	{
 		tree = nullptr;
 	}
+	// copy constructor
 	BSTree<T>(const BSTree<T>& TreeIn)
 	{
 		tree = copyTree(TreeIn.tree);
 	}
+	// deep copy constructor
 	const BSTree<T>& operator =(const BSTree<T>& TreeIn)
 	{
 		// need a deep copy of the pointers and nodes
@@ -205,15 +233,18 @@ public:
 		}
 		return *this;
 	}
-	// needs to be copied into both adds same code but different appected par
+	// adds a element to the tree
 	void add(const T& elementIn)
 	{
 		tree = addElement(tree, elementIn);
 	}
+	// adds a element to the tree
 	void add(T && elementIn)
 	{
 		tree = addElement(tree, elementIn);
 	}
+	// find a element in the tree and uses the overload < > if the class has one
+	// or uses the default T
 	template<typename TT>
 	T* findElement(const TT& t)
 	{
@@ -226,6 +257,10 @@ public:
 			return nullptr;
 		}
 	}
+	// find a element in the tree and uses the overload < > if the class has one
+	// or uses the default T
+	// and returns the T or nullptr
+	// is const so it's immutable
 	template<typename TT>
 	const T* findElement(const TT& t) const
 	{
@@ -238,6 +273,9 @@ public:
 			return nullptr;
 		}
 	}
+	// removes a element in the tree and uses the overload < > if the class has one
+	// or uses the default T
+	// return true that it was delete or false that it was not found 
 	template<typename TT>
 	bool removeElement(const TT& t)
 	{
@@ -349,9 +387,10 @@ public:
 		}
 		return false;
 	}
+	// return the max element in the tree mutable
 	T* maxElement()
 	{
-		if(tree == nullptr)
+		if(isEmpty())
 		{
 			return nullptr;
 		}
@@ -360,9 +399,10 @@ public:
 			return &maxLeaf(tree)->d;
 		}
 	}
+	// returns the min element in the tree mutable
 	T* minElement()
 	{
-		if(tree == nullptr)
+		if(isEmpty())
 		{
 			return nullptr;
 		}
@@ -371,9 +411,10 @@ public:
 			return &minLeaf(tree)->d;
 		}
 	}
+	// returns the max element and it's nonmutable
 	const T* maxElement() const
 	{
-		if(tree == nullptr)
+		if(isEmpty())
 		{
 			return nullptr;
 		}
@@ -382,9 +423,10 @@ public:
 			return &maxLeaf(tree)->d;
 		}
 	}
+	// returns the min element and it's nonmutable
 	const T* minElement() const
 	{
-		if(tree == nullptr)
+		if(isEmpty())
 		{
 			return nullptr;
 		}
@@ -393,10 +435,12 @@ public:
 			return &minLeaf(tree)->d;
 		}
 	}
+	// return if the tree pointer is nullptr since it means it's empty
 	bool isEmpty() const 
 	{
 		return tree == nullptr;
 	}
+	// delete the tree and sets it back to nullptr
 	void clear()
 	{
 		if(tree != nullptr)

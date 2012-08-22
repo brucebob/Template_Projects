@@ -36,17 +36,19 @@ private:
 		return root < node;
 	}
 	// makes a single copy and swap two elements
+	// for complex element a copy constructor is required
 	void swap(T& t1, T& t2)
 	{
 		T temp = t1;
 		t1 = t2;
 		t2 = temp;
 	}
-	// takes a index and see if left or right based on a array based tree
+	// takes a index and see if left or right based on a array based tree type
 	// (index - 1 ) / 2 is the parent of index
 	// make sure there more then one element
 	void percolateUp(int index)
 	{
+		// uses the function pointer to min or max
 		if(index > 0 && (this->*funct)(pQue[(index - 1) / 2], pQue[index]))
 		{
 			// need a swap since index has a higher priority then (index - 1) / 2
@@ -91,18 +93,19 @@ private:
 		}
 	}
 public:
-	// since vector does it's own deleting nothing need to be removed
+	// since vector<T> does it's own deallocating
 	~PriorityQueue()
 	{
 
 	}
 	// deep copy of operator=()
-	// sets the QUE_TYPE and copies the queue
+	// sets the QUE_TYPE and copies the vector<T>
 	const PriorityQueue& operator=(const PriorityQueue& t)
 	{
 		if(this != &t)
 		{
-			if(t.funct == & maxCompare)
+			// compare what functions it's pointing too
+			if(t.funct == &maxCompare)
 			{
 				funct = &PriorityQueue::maxCompare;
 			}
