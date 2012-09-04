@@ -2,8 +2,10 @@
 /*
 *		TreapTree Data Struct
 *		Use both the Heap propriety and the binary search tree propriety
+*		keeps a balance tree so if the inserting element are sorted it's 
+*		not a one sided tree
 */
-
+// need to develop a better design for the treaptree then the one i have then i'll refacor it.
 template<typename T>
 class TreapTree
 {
@@ -18,22 +20,22 @@ private:
 		int priority;
 	};
 	const static int MAXRANDOM = INT_MAX - 1;
-	Node<T> tree;
+	Node<T>* tree;
 	int nextRandom()
 	{
 		return (int)rand() % MAXRANDOM;
 	}
 	Node<T>* makeNode(const T& t)
 	{
-		Node<T>* newNode;
+		Node<T>* newNode = new Node<T>;
 		if(newNode != nullptr)
 		{
-		newNode->t = t;
-		newNode->parent = nullptr;
-		newNode->right = nullptr;
-		newNode->left = nullptr;
-		priority = nextRandom();
-		return newNode;
+			newNode->t = t;
+			newNode->parent = nullptr;
+			newNode->right = nullptr;
+			newNode->left = nullptr;
+			priority = nextRandom();
+			return newNode;
 		}
 		else
 		{
@@ -77,6 +79,32 @@ private:
 		}
 		return nullptr;
 	}
+	Node<T>* copyTree(Node<T>* root)
+	{
+		if(root != nullptr)
+		{
+			Node<T>* newRoot = nullptr;
+			std::list<Node<T>*> stack;
+
+			stack.push_back(root);
+			while(!stack.empty())
+			{
+				if(stack.front()->Left != nullptr)
+				{
+					stack.push_back(stack.front()->Left);
+				}
+				if(stack.front()->Right != nullptr)
+				{
+					stack.push_back(stack.front()->Right);
+				}
+				newRoot = addElement(newRoot, stack.front()->d);
+				stack.pop_front();
+			}
+
+			return newRoot;
+		}
+		return nullptr;
+	}
 public:
 	~TreapTree()
 	{
@@ -112,9 +140,15 @@ public:
 	}
 	const TreapTree& operator=(const TreapTree& treeIn)
 	{
-		clear();
-		if(!treeIn.isEmpty())
+		
+		if(this != &treeIn)
 		{
+			clear();
+			if(treeIn.isEmpty())
+			{
+				return *this;
+			}
+
 			// need to copy the tree 
 			std::list<Node<T>*> stack;
 			stack.push_front(treeIn.tree);
@@ -138,47 +172,44 @@ public:
 	{
 		if(tree == nullptr)
 		{
-			tree = newNode(t);
+			tree = makeNode(t);
 		}
 		else
 		{
 			Node<T>* transPtr = tree;
-			if(transPtr->t > t)
+			Node<T>* addedNode = nullptr;
+			while(transPtr != nullptr)
 			{
-				if(transPtr->left == nullptr)
+				if(transPtr->t > t)
 				{
-					transPtr->left = makeNode(t);
-					transPtr->left->parent = transPtr->left;
-					// it's added and now it need to peculate up based on the priority
-					if(transPtr->left->priority > transPtr->priority)
+					if(transPtr->left == nullptr)
 					{
-						// then the left 
-						Node<T>* temp = transPtr->left;
-						temp->right = transPtr;
-						temp->parent = transPtr->parent;
-						transPtr->parent = temp;
+						transPtr->left = makeNode(t);
+						transPtr->left->parent = transPtr;
+						addedNode = transPtr->left;
+						break;
 					}
-					return;
+					transPtr = transPtr->left;
 				}
-				transPtr = transPtr->left;
+				else
+				{
+					if(transPtr->right == nullptr)
+					{
+						transPtr->right = makeNode(t);
+						transPtr->right->parent = transPtr;
+						addedNode = transPtr->right;
+						break;
+					}
+					transPtr = transPtr->right;
+				}
 			}
-			else
+			while(addedNode->parent != nullptr && addedNode->priority > addedNode->parent->priority)
 			{
-				if(transPtr->right == nullptr)
-				{
-					transPtr->right = makeNode(t);
-					transPtr->right->parent = transPtr->right;
-					// it's added and now it need to peculate up based on the priority
-					if(transPtr->right->priority > transPtr->priority)
-					{
-						Node<T>* temp = transPtr->right;
-						temp->left = transPtr;
-						temp->parent = transPtr->parent;
-						transPtr->parent = temp;
-					}
-					return;
-				}
-				transPtr = transPtr->right;
+				// swap the parent and the new node
+				Node<T>* temp = addedNode->parent;
+				addedNode->parent = temp->parent;
+				temp->parent = addedNode;
+				// now i'll have to swap the leaves.
 			}
 		}
 	}

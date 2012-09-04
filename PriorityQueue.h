@@ -121,7 +121,7 @@ public:
 	// sets the QUE_TYPE and copies the list
 	PriorityQueue(const PriorityQueue& t)
 	{
-		if(t.funct == & maxCompare)
+		if(t.funct == &maxCompare)
 		{
 			funct = &PriorityQueue::maxCompare;
 		}
@@ -149,6 +149,46 @@ public:
 		case MIN:
 			{
 				funct = &PriorityQueue::minCompare;
+			}
+		}
+	}
+	// constructor that takes the type of que it is and a que and reads the element to the type of que
+	PriorityQueue(QUE_TYPE qt, const PriorityQueue& t)
+	{
+		switch(qt)
+		{
+		case MAX:
+			{
+				funct = &PriorityQueue::maxCompare;
+				if(t.funct == &maxCompare)
+				{
+					pQue = t.pQue;
+				}
+				else
+				{
+					// need to reinsert the elements.
+					for(std::vector<T>::iterator itor = t.pQue.begin(); itor != t.pQue.end(); itor++)
+					{
+						add(*itor);
+					}
+				}
+				break;
+			}
+		case MIN:
+			{
+				funct = &PriorityQueue::minCompare;
+				if(t.funct == &minCompare)
+				{
+					pQue = t.pQue;
+				}
+				else
+				{
+					// need to reinsert the elements.
+					for(std::vector<T>::iterator itor = t.pQue.begin(); itor != t.pQue.end(); itor++)
+					{
+						add(*itor);
+					}
+				}
 			}
 		}
 	}
@@ -197,7 +237,7 @@ public:
 	// return the front of the queue 
 	// the front is immutable since it could edit the priority
 	// throws if empty
-	const T& front() const
+	T& front() const
 	{
 		if(!isEmpty())
 		{
@@ -211,5 +251,9 @@ public:
 	bool isEmpty() const
 	{
 		return pQue.empty();
+	}
+	unsigned int size() const 
+	{
+		return pQue.size();
 	}
 };

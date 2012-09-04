@@ -23,6 +23,7 @@ private:
 		struct Node<T>* Right;
 	};
 	Node<T>* tree;
+	unsigned int totalElements;
 private:
 	// makes the node for the tree
 	// checks to see if it runs out of memmory and throws a bad_alloc
@@ -175,6 +176,7 @@ private:
 	// adds a new element to a empty child based of the binary search property
 	Node<T>* addElement(Node<T>* root, const T& element)
 	{
+		totalElements++;
 		if(root == nullptr)
 		{
 			return makeNode(element);
@@ -215,11 +217,13 @@ public:
 	// sets the tree to nullptr
 	BSTree<T>()
 	{
+		totalElements = 0;
 		tree = nullptr;
 	}
 	// copy constructor
 	BSTree<T>(const BSTree<T>& TreeIn)
 	{
+		totalElements = TreeIn.totalElements;
 		tree = copyTree(TreeIn.tree);
 	}
 	// deep copy constructor
@@ -229,6 +233,7 @@ public:
 		if(this != &TreeIn)
 		{
 			clear();
+			totalElements = TreeIn.totalElements;
 			tree = copyTree(TreeIn.tree);
 		}
 		return *this;
@@ -284,6 +289,7 @@ public:
 		{
 			Node<T>* parent = parentOf(tree, element);
 			// checks to see if it's a leaf node
+			totalElements--;
 			if(!hasChild(element))
 			{
 				// it's a leaf node but not the root
@@ -461,8 +467,12 @@ public:
 				delete stack.front();
 				stack.pop_front();
 			}
-			tree = nullptr;
 		}
+		tree = nullptr;
+	}
+	const unsigned int size() const
+	{
+		return totalElements;
 	}
 
 	// going to have bi direction type iterators with a vector of *
@@ -475,22 +485,30 @@ public:
 	class inOrderIterator
 	{
 	private:
-		std::vector<Node<T>*> ioiList;
-		unsigned int cSpot;
+		std::list<Node<T>*> ioiList;
 	public:
-		
 		void operator++(int)
 		{
 			cSpot++;
 		}
 		T& operator*()
 		{
-			return ioiList[cSpot];
+			return ioiList[0];
 		}
 		T* operator->() const
 		{
-			return &ioiList[cSpot];
+			return &ioiList[0];
 		}
 		inOrderIterator(
-	};*/
+	};
+	
+	
+	
+	
+	for the in order may make a array of pointer so i can access like an array and when it's updated it's sync
+	T* t = new T[size];
+
+	
+	
+	*/
 };

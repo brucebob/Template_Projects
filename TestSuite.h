@@ -7,12 +7,13 @@
 
 namespace TestSuite 
 {
-	typedef void(*TestFn)( void );
+	typedef void(*TestFn)(void);
 
 	struct Error 
 	{
-		Error( const std::string & cond, const std::string & file, int line ) :mCond( cond ), mFile( file ), mLine( line ) 
+		Error(const std::string& cond, const std::string& file, int line): mCond(cond), mFile(file), mLine(line) 
 		{
+
 		}
 		std::string mCond, mFile;
 		int mLine;
@@ -26,6 +27,7 @@ namespace TestSuite
 
 		Tester() : mErrors( 0 ) 
 		{
+
 		}
 
 	public:
@@ -34,19 +36,19 @@ namespace TestSuite
 			static Tester instance;
 			return instance;
 		}
-		void AddTest( const std::string & name, TestFn test ) 
+		void AddTest(const std::string & name, TestFn test) 
 		{
-			if ( ! mTests.insert( std::make_pair( name, test ) ).second ) 
+			if (!mTests.insert(std::make_pair(name, test)).second) 
 			{ 
 				std::cerr << "duplicate test name: " << name << std::endl;
-				std::exit( -1 );
+				std::exit(-1);
 			}
 		}
 
 		void RunTests() 
 		{
-			std::map<std::string,TestFn>::iterator it = mTests.begin();
-			while ( it != mTests.end() ) 
+			std::map<std::string, TestFn>::iterator it = mTests.begin();
+			while (it != mTests.end()) 
 			{
 				try 
 				{
@@ -94,5 +96,5 @@ namespace TestSuite
 #define TEST_CONDITION(cond)								\
 	if(!(cond)) 												\
 	{															\
-		throw TestSuite::Error(#cond, __FILE__, __LINE__ );		\
+		throw TestSuite::Error(#cond, __FILE__, __LINE__);		\
 	}

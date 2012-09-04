@@ -25,7 +25,7 @@ public:
 // PriorityQueue Unit Testing
 TEST_ADD(PriorityQueue_MinQue)
 {
-	PriorityQueue<int> pQue  (MIN);
+	PriorityQueue<int> pQue(MIN);
 	SortedList<int> sList;
 	
 	for(unsigned int x = 0; x < 1000; x++)
@@ -92,6 +92,15 @@ TEST_ADD(TreapTree_AddElements)
 
 }
 // Binary Tree Unit Testing
+TEST_ADD(BSTree_SizeTest)
+{
+	BSTree<int> tree;
+
+	while(tree.size() != 20)
+	{
+		tree.add(rand() % 5000-2500);
+	}
+}
 TEST_ADD(BSTree_MinAndMax)
 {
 	BSTree<int> tree;
