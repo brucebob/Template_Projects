@@ -1,4 +1,5 @@
 #include <list>
+#include <limits.h>
 /*
 *		TreapTree Data Struct
 *		Use both the Heap propriety and the binary search tree propriety
@@ -13,11 +14,11 @@ private:
 	template<typename T> 
 	struct Node
 	{
+		T t;
+		int priority;
 		struct Node<T>* left;
 		struct Node<T>* right;
 		struct Node<T>* parent;
-		T t;
-		int priority;
 	};
 	const static int MAXRANDOM = INT_MAX - 1;
 	Node<T>* tree;
@@ -34,7 +35,7 @@ private:
 			newNode->parent = nullptr;
 			newNode->right = nullptr;
 			newNode->left = nullptr;
-			priority = nextRandom();
+			newNode->priority = nextRandom();
 			return newNode;
 		}
 		else
@@ -64,13 +65,13 @@ private:
 		Node<T>* transPtr = root;
 		while(transPtr != nullptr)
 		{
-			if(transPtr->d > t)
+			if(transPtr->t > t)
 			{
-				transPtr = transPtr->Left;
+				transPtr = transPtr->left;
 			}
-			else if(transPtr->d < t)
+			else if(transPtr->t < t)
 			{
-				transPtr = transPtr->Right;
+				transPtr = transPtr->right;
 			}
 			else
 			{
@@ -104,6 +105,27 @@ private:
 			return newRoot;
 		}
 		return nullptr;
+	}
+	void printTree(Node<T>* root)
+	{
+		std::list<Node<T>*> stack;
+		stack.push_back(root);
+		std::cout << std::endl;
+		while(!stack.empty())
+		{
+			if(stack.front()->left != nullptr)
+			{
+				stack.push_back(stack.front()->left);
+			}
+			if(stack.front()->right != nullptr)
+			{
+				stack.push_back(stack.front()->right);
+			}
+
+			std::cout << stack.front()->t << " ";
+			stack.pop_front();
+		}
+		std::cout << std::endl;
 	}
 public:
 	~TreapTree()
@@ -215,14 +237,132 @@ public:
 	}
 	void add(const T& t)
 	{
+		if(tree == nullptr)
+		{
+			tree = makeNode(t);
+		}
+		else
+		{
+			Node<T>* transPtr = tree;
+			Node<T>* addedNode = nullptr;
+			while(transPtr != nullptr)
+			{
+				if(transPtr->t > t)
+				{
+					if(transPtr->left == nullptr)
+					{
+						transPtr->left = makeNode(t);
+						transPtr->left->parent = transPtr;
+						addedNode = transPtr->left;
+						break;
+					}
+					transPtr = transPtr->left;
+				}
+				else
+				{
+					if(transPtr->right == nullptr)
+					{
+						transPtr->right = makeNode(t);
+						transPtr->right->parent = transPtr;
+						addedNode = transPtr->right;
+						break;
+					}
+					transPtr = transPtr->right;
+				}
+			}
+			// check to see if it needs to move up
+			while(addedNode->parent != nullptr && addedNode->priority > addedNode->parent->priority)
+			{
+				Node<T>* parent = addedNode->parent;
 
+				// need to check what side it is on.
+				// then rotate them either left or right.
+				printTree(tree);
+				if(parent->left == addedNode)
+				{
+					if(parent == tree)
+					{
+						tree = RotateLeft(tree, parent, addedNode);
+					}
+					else
+					{
+						addedNode = RotateLeft(tree, parent, addedNode);
+					}
+				}
+				else if(parent->right == addedNode)
+				{
+					// have to see if the head pointer is being change as it wont be seen if any changes are made to it
+					if(parent == tree)
+					{
+						tree = RotateRight(tree, parent, addedNode);
+					}
+					else
+					{
+						addedNode = RotateRight(tree, parent, addedNode);
+					}
+				}
+			}
+		}
+	}
+	Node<T>* RotateLeft(Node<T>* treedata, Node<T>* parent, Node<T>* child) 
+	{
+		bool swapedChilds = false;
+		if(child->right != nullptr)
+		{
+			parent->left = child->right;
+			parent->left->parent = parent;
+			swapedChilds = true;
+		}
+		child->parent = parent->parent;
+		child->right = parent;		
+		swapPositionInParent(parent, child);
+		parent->parent = child;
+		if(!swapedChilds)
+		{
+			parent->left = nullptr;
+		}
+		return child;
+	}
+	Node<T>* RotateRight(Node<T>* treedata, Node<T>* parent, Node<T>* child) 
+	{
+		bool swapedChilds = false;
+		// handles children
+		if(child->left != nullptr)
+		{
+			parent->right = child->left;
+			parent->right->parent = parent;
+			swapedChilds = true;
+		}
+		child->parent = parent->parent;
+		child->left = parent;		
+		swapPositionInParent(parent, child);
+		parent->parent = child;
+		if(!swapedChilds)
+		{
+			parent->right = nullptr;
+		}
+		return child;
+	}
+	void swapPositionInParent(Node<T>* parent, Node<T>* child) 
+	{
+		if(parent->parent != nullptr)
+		{
+			if(parent->parent->right == parent)
+			{
+				parent->parent->right = child;
+			}
+			else if(parent->parent->left == parent)
+			{
+				parent->parent->left = child;
+			}
+		}
 	}
 	template<typename TT>
 	T* findElement(const TT& t)
 	{
 		if(tree != nullptr)
 		{
-			return &findNode(tree, t)->d; 
+			return &findNode(tree, t)->t; 
 		}
 		else
 		{

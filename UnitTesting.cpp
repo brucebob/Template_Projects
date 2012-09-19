@@ -87,9 +87,21 @@ TEST_ADD(TreapTree_MemLeak)
 {
 
 }
-TEST_ADD(TreapTree_AddElements)
+TEST_ADD(TreapTree_AddPrimitiveElements)
 {
+	TreapTree<int> tTree;
+	std::vector<int> sList;
+	for(unsigned int x = 0; x < 100; x++)
+	{
+		int y = (rand() % 5000) - 2500;
+		tTree.add(y);
+		sList.push_back(y);
+	}
 
+	for(unsigned int x = 0; x < sList.size(); x++)
+	{		
+		TEST_CONDITION(tTree.findElement(sList[x]) != nullptr);
+	}
 }
 // Binary Tree Unit Testing
 TEST_ADD(BSTree_SizeTest)
