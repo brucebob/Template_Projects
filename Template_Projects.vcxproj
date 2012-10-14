@@ -93,7 +93,7 @@
     <ClCompile Include="StopWatch.cpp" />
     <ClCompile Include="Template_Projects.cpp" />
     <ClCompile Include="TestSuite.cpp" />
-    <ClCompile Include="UnitTesting.cpp" />
+    <ClCompile Include="UnitTesting.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -10,7 +10,7 @@
 template<typename T> class SortedList
 {
 private:
-	std::vector<T> _list;
+	std::vector<T> sorted_list;
 public:
 	~SortedList()
 	{
@@ -31,7 +31,7 @@ public:
 	// copy constructor of a vector<T> 
 	const SortedList& operator=(const std::vector<T>& vList)
 	{
-		_list.clear();
+		sorted_list.clear();
 		for(std::vector<T>::const_iterator itor = vList.cbegin(); itor != vList.cend(); itor++)
 		{
 			add(*itor);
@@ -41,14 +41,14 @@ public:
 	// copy constructor
 	SortedList<T>(const SortedList& listIn)
 	{
-		_list = listIn._list;
+		sorted_list = listIn.sorted_list;
 	}
 	// copy constructor
 	const SortedList& operator=(const SortedList& listIn)
 	{
 		if(this != &listIn)
 		{
-			_list = listIn._list;
+			sorted_list = listIn.sorted_list;
 		}
 		return *this;
 	}
@@ -56,9 +56,9 @@ public:
 	// throw if out of bounds
 	T& operator[](unsigned int spot)
 	{
-		if(spot < _list.size())
+		if(spot < sorted_list.size())
 		{
-			return _list[spot];
+			return sorted_list[spot];
 		}
 		else
 		{
@@ -69,9 +69,9 @@ public:
 	// throws if out of bounds
 	const T& operator[](unsigned int spot) const
 	{
-		if(spot < _list.size())
+		if(spot < sorted_list.size())
 		{
-			return _list[spot];
+			return sorted_list[spot];
 		}
 		else
 		{
@@ -81,62 +81,62 @@ public:
 	// empties the list to 0 elements
 	void clear()
 	{
-		_list.clear();
+		sorted_list.clear();
 	}
-	// takes in a r value ref and adds it to the container
+	// takes in a universal ref and adds it to the container
 	void add(T && t)
 	{
 		// use binary search to find where the next element should be inserted keeps it O(log(n))
-		unsigned int start = 0, end = _list.size();
+		unsigned int start = 0, end = sorted_list.size();
 		while(start < end)
 		{
 			unsigned int mid = (end + start) / 2;
-			if(_list[mid] > t)
+			if(sorted_list[mid] > t)
 			{
 				end = mid;
 			}
-			else if(_list[mid] < t)
+			else if(sorted_list[mid] < t)
 			{
 				start = mid + 1;
 			}
 			else
 			{
-				_list.insert(_list.begin() + mid, t);
+				sorted_list.insert(sorted_list.begin() + mid, t);
 				return;
 			}
 		}
-		_list.insert(_list.begin() + start, t);
+		sorted_list.insert(sorted_list.begin() + start, t);
 	}
 	// takes a const T and adds it to the container
 	void add(const T& t)
 	{
 		// use binary search to find where the next element should be inserted keeps it O(log(n))
-		unsigned int start = 0, end = _list.size();
+		unsigned int start = 0, end = sorted_list.size();
 		while(start < end)
 		{
 			unsigned int mid = (end + start) / 2;
-			if(_list[mid] > t)
+			if(sorted_list[mid] > t)
 			{
 				end = mid;
 			}
-			else if(_list[mid] < t)
+			else if(sorted_list[mid] < t)
 			{
 				start = mid + 1;
 			}
 			else
 			{
-				_list.insert(_list.begin() + mid, t);
+				sorted_list.insert(sorted_list.begin() + mid, t);
 				return;
 			}
 		}
-		_list.insert(_list.begin() + start, t);	
+		sorted_list.insert(sorted_list.begin() + start, t);	
 	}
 	// uses binary search to find the element needed returns position if found
 	// returns -1 if not found 
 	template<typename TT>
 	const int positionOf(const TT& t)
 	{
-		if(_list.empty())
+		if(sorted_list.empty())
 		{
 			return -1;
 		}
@@ -144,15 +144,15 @@ public:
 		{
 			// uses binary search to find the element T
 			unsigned int start = 0;
-			unsigned int end = _list.size();
+			unsigned int end = sorted_list.size();
 			while(start < end)
 			{
 				unsigned int mid = (end + start) / 2;
-				if(_list[mid] > t)
+				if(sorted_list[mid] > t)
 				{
 					end = mid;
 				}
-				else if(_list[mid] < t)
+				else if(sorted_list[mid] < t)
 				{
 					start = mid + 1;
 				}
@@ -170,24 +170,24 @@ public:
 		std::vector<T> newList;		
 		unsigned int x = 0;
 		unsigned int y = 0;
-		while(x < _list.size() || y < t.size())
+		while(x < sorted_list.size() || y < t.size())
 		{ 
-			if(x == _list.size() || y == t.size())
+			if(x == sorted_list.size() || y == t.size())
 			{
 				break;
 			}
-			if(_list[x] > t[y])
+			if(sorted_list[x] > t[y])
 			{
 				newList.push_back(t[y++]);
 			}
-			else if (_list[x] < t[y])
+			else if (sorted_list[x] < t[y])
 			{
-				newList.push_back(_list[x++]);
+				newList.push_back(sorted_list[x++]);
 			}
 		}
-		while(x != _list.size())
+		while(x != sorted_list.size())
 		{
-			newList.push_back(_list[x++]);
+			newList.push_back(sorted_list[x++]);
 		}
 		while(y != t.size())
 		{
@@ -195,7 +195,7 @@ public:
 		}
 
 		t.clear();
-		_list = newList;
+		sorted_list = newList;
 	}
 	// takes vector<T> and adds it to Sorted List and clears the vector
 	void merge(std::vector<T>& t)
@@ -210,9 +210,9 @@ public:
 	// throws if out of bounds
 	void removeAtIndex(const unsigned int spot)
 	{
-		if(spot < _list.size())
+		if(spot < sorted_list.size())
 		{
-			_list.erase(_list.begin() + spot);
+			sorted_list.erase(sorted_list.begin() + spot);
 		}
 		else
 		{
@@ -226,17 +226,17 @@ public:
 		int spot = positionOf(t);
 		if(spot != -1)
 		{
-			_list.erase(_list.begin() + spot);
+			sorted_list.erase(sorted_list.begin() + spot);
 		}
 	}
 	// return the size of the sorted list
 	const unsigned int size() const
 	{
-		return _list.size();
+		return sorted_list.size();
 	}
 	// returns if the Sorted List is empty
 	bool isEmpty() const
 	{
-		return _list.empty();
+		return sorted_list.empty();
 	}
 };

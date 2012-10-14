@@ -319,7 +319,6 @@ public:
 				{
 					if(parent != nullptr)
 					{
-						parent->Left = element->Left;
 						if(parent->Left == element)
 						{
 							parent->Left = element->Left;

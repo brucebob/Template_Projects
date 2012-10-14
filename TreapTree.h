@@ -1,12 +1,11 @@
 #include <list>
-#include <limits.h>
+#include <exception>
 /*
 *		TreapTree Data Struct
 *		Use both the Heap propriety and the binary search tree propriety
 *		keeps a balance tree so if the inserting element are sorted it's 
 *		not a one sided tree
 */
-// need to develop a better design for the treaptree then the one i have then i'll refacor it.
 template<typename T>
 class TreapTree
 {
@@ -20,7 +19,8 @@ private:
 		struct Node<T>* right;
 		struct Node<T>* parent;
 	};
-	const static int MAXRANDOM = INT_MAX - 1;
+	const static int MAXRANDOM = 100000;
+	unsigned int treeSize;
 	Node<T>* tree;
 	int nextRandom()
 	{
@@ -86,7 +86,6 @@ private:
 		{
 			Node<T>* newRoot = nullptr;
 			std::list<Node<T>*> stack;
-
 			stack.push_back(root);
 			while(!stack.empty())
 			{
@@ -101,7 +100,6 @@ private:
 				newRoot = addElement(newRoot, stack.front()->d);
 				stack.pop_front();
 			}
-
 			return newRoot;
 		}
 		return nullptr;
@@ -127,6 +125,41 @@ private:
 		}
 		std::cout << std::endl;
 	}
+	bool hasChild(Node<T>* node)
+	{
+		if(node->left != nullptr || node->right != nullptr)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	// return true if only the left child is not nullptr
+	bool onlyLeftChild(Node<T>* node)
+	{
+		if(node->left != nullptr && node->right == nullptr)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	// return true if only the right child is not nullptr
+	bool onlyRightChild(Node<T>* node)
+	{
+		if(node->right != nullptr && node->left == nullptr)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 public:
 	~TreapTree()
 	{
@@ -135,58 +168,20 @@ public:
 	TreapTree()
 	{
 		tree = nullptr;
+		treeSize = 0;
 	}
 	TreapTree(const TreapTree& treeIn)
 	{
-		// need to run a bfs and then copy the prioritys
-		
-		tree = nullptr;
-		if(!isEmpty())
-		{
-			std::list<Node<T>*> stack;
-			stack.push_front(tree);
-			while(!stack.empty())
-			{
-				if(stack.front()->left != nullptr)
-				{
-					stack.push_back(stack.front()->left);
-				}
-				if(stack.front()->right != nullptr)
-				{
-					stack.push_back(stack.front()->right);
-				}
-			}
-			add(stack.front()->t, stack.front()->priority);
-			stack.pop_front();
-		}
+		tree = copyTree(treeIn.tree);
+		treeSize = treeIn.size;
 	}
 	const TreapTree& operator=(const TreapTree& treeIn)
-	{
-		
+	{	
 		if(this != &treeIn)
 		{
 			clear();
-			if(treeIn.isEmpty())
-			{
-				return *this;
-			}
-
-			// need to copy the tree 
-			std::list<Node<T>*> stack;
-			stack.push_front(treeIn.tree);
-			while(!stack.empty())
-			{
-				if(stack.front()->left != nullptr)
-				{
-					stack.push_back(stack.front()->left);
-				}
-				if(stack.front()->right != nullptr)
-				{
-					stack.push_back(stack.front()->right);
-				}
-			}
-			add(stack.front()->t, stack.front()->priority);
-			stack.pop_front();
+			tree = copyTree(treeIn.tree);
+			treeSize = treeIn.treeSize;
 		}
 		return *this;
 	}
@@ -225,15 +220,39 @@ public:
 					transPtr = transPtr->right;
 				}
 			}
+			// check to see if it needs to move up
 			while(addedNode->parent != nullptr && addedNode->priority > addedNode->parent->priority)
 			{
-				// swap the parent and the new node
-				Node<T>* temp = addedNode->parent;
-				addedNode->parent = temp->parent;
-				temp->parent = addedNode;
-				// now i'll have to swap the leaves.
+				Node<T>* parent = addedNode->parent;
+
+				// need to check what side it is on.
+				// then rotate them either left or right.
+				if(parent->left == addedNode)
+				{
+					if(parent == tree)
+					{
+						tree = RotateLeft(tree, parent, addedNode);
+					}
+					else
+					{
+						addedNode = RotateLeft(tree, parent, addedNode);
+					}
+				}
+				else if(parent->right == addedNode)
+				{
+					// have to see if the head pointer is being change as it wont be seen if any changes are made to it
+					if(parent == tree)
+					{
+						tree = RotateRight(tree, parent, addedNode);
+					}
+					else
+					{
+						addedNode = RotateRight(tree, parent, addedNode);
+					}
+				}
 			}
 		}
+		treeSize++;
 	}
 	void add(const T& t)
 	{
@@ -277,7 +296,6 @@ public:
 
 				// need to check what side it is on.
 				// then rotate them either left or right.
-				printTree(tree);
 				if(parent->left == addedNode)
 				{
 					if(parent == tree)
@@ -303,6 +321,7 @@ public:
 				}
 			}
 		}
+		treeSize++;
 	}
 	Node<T>* RotateLeft(Node<T>* treedata, Node<T>* parent, Node<T>* child) 
 	{
@@ -358,7 +377,7 @@ public:
 		}
 	}
 	template<typename TT>
-	T* findElement(const TT& t)
+	T* find(const TT& t)
 	{
 		if(tree != nullptr)
 		{
@@ -370,7 +389,7 @@ public:
 		}
 	}
 	template<typename TT>
-	const T* findElement(const TT& t) const
+	const T* find(const TT& t) const
 	{
 		if(tree != nullptr)
 		{
@@ -381,6 +400,329 @@ public:
 			return nullptr;
 		}
 	}
+	
+	template<typename TT>
+	bool remove(const TT& t)
+	{
+		Node<T>* element = findNode(tree, t);
+		if(element != nullptr)
+		{		
+			// checks to see if it's a leaf node
+			Node<T>* parent = element->parent;
+			if(!hasChild(element))
+			{
+				// it's a leaf node but not the root
+				if(parent != nullptr)
+				{
+					if(parent->left == element)
+					{
+						parent->left = nullptr;
+					}
+					else
+					{
+						parent->right = nullptr;
+					}
+					delete element;
+				}
+				else // it's the root node with no children
+				{
+					delete element;
+					tree = nullptr;
+				}
+			}
+			// it's a edge node
+			else
+			{
+				// only has one left child 
+				if(onlyLeftChild(element))
+				{
+					if(parent != nullptr)
+					{
+						if(parent->left == element)
+						{
+							parent->left = element->left;
+							parent->left->parent = parent;
+						}
+						else
+						{
+							parent->right = element->left;
+							parent->right->parent = parent;
+						}
+					}
+					else
+					{
+						tree = element->left;
+						tree->parent = nullptr;
+					}
+					delete element;
+				}
+				// only has one right child
+				else if(onlyRightChild(element))
+				{
+					if(parent != nullptr)
+					{			
+						if(parent->left == element)
+						{
+							parent->left = element->right;
+							parent->left->parent = parent;
+						}
+						else
+						{
+							parent->right = element->right;
+							parent->right->parent = parent;
+						}
+					}
+					else
+					{
+						tree = element->right;
+						tree->parent = nullptr;
+					}
+					delete element;
+				}
+				else
+				{
+					// has both left and right
+					// have to find which has the max priority then that one comes first.
+					// check to see what child goes first
+					if(element->left->priority > element->right->priority)
+					{
+						if(parent != nullptr)
+						{			
+							if(parent->left == element)
+							{
+								parent->left = element->left;
+								parent->left->parent = parent;
+							}
+							else
+							{
+								parent->right = element->left;
+								parent->right->parent = parent;
+							}
+						}
+						else
+						{
+							tree = element->left;
+							tree->parent = nullptr;
+						}
+						
+						// right will have to go into elements right
+						balanceTree(element->left, element->right, false);
+					}
+					else
+					{
+						if(parent != nullptr)
+						{			
+							if(parent->right == element)
+							{
+								parent->right = element->right;
+								parent->right->parent = parent;
+							}
+							else
+							{
+								parent->left = element->right;
+								parent->left->parent = parent;
+							}
+						}
+						else
+						{
+							tree = element->right;
+							tree->parent = nullptr;
+						}
+						// left will have to go into elements left
+						balanceTree(element->right, element->left, true);
+					}
+					delete element;
+				}
+			}
+			treeSize--;
+			return true;
+		}
+		return false;
+	}
+	// heres where i need to finsish
+	void balanceTree(Node<T>* fixedNode, Node<T>* node, bool left) 
+	{
+		Node<T>* transPtr = fixedNode;
+		if(left)
+		{
+			while(transPtr->left != nullptr && transPtr->left->priority > node->priority)
+			{
+				transPtr = transPtr->left;
+			}
+
+			if(transPtr->left != nullptr && node->left != nullptr)
+			{
+				if(transPtr->priority < node->priority)
+				{
+					balanceTree(transPtr->left, node->left, true);
+				}
+				else
+				{
+
+				}
+			}
+			else if(transPtr->left != nullptr)
+			{
+				node->left = transPtr->left;
+				node->left->parent = node;
+				transPtr->left = node;
+				transPtr->left->parent = transPtr;
+			}
+			else
+			{
+				transPtr->left = node;
+				transPtr->left->parent = transPtr;
+			}
+		}
+		else
+		{
+			while(transPtr->right != nullptr && transPtr->right->priority < node->priority)
+			{
+				transPtr = transPtr->right;
+			}
+
+			if(transPtr->right != nullptr && node->right != nullptr)
+			{
+				// need to rebalance it from here
+				int x;
+			}
+			else if(transPtr->right != nullptr)
+			{
+				node->right = transPtr->right;
+				node->right->parent = node;
+				transPtr->right = node;
+				transPtr->right->parent = transPtr;
+			}
+			else
+			{
+				transPtr->right = node;
+				node->parent = transPtr;
+			}
+		}
+	}
+	template<typename TT>
+	bool remove(const TT && t)
+	{
+		Node<T>* element = findNode(tree, t);
+		if(element != nullptr)
+		{		
+			// checks to see if it's a leaf node
+			Node<T>* parent = element->parent;
+			if(!hasChild(element))
+			{
+				// it's a leaf node but not the root
+				if(parent != nullptr)
+				{
+					if(parent->left == element)
+					{
+						parent->left = nullptr;
+					}
+					else
+					{
+						parent->right = nullptr;
+					}
+					delete element;
+				}
+				else // it's the root node with no children
+				{
+					delete element;
+					tree = nullptr;
+				}
+			}
+			// it's a edge node
+			else
+			{
+				// only has one left child 
+				if(onlyLeftChild(element))
+				{
+					if(parent != nullptr)
+					{
+						if(parent->left == element)
+						{
+							parent->left = element->left;
+							parent->left->parent = parent;
+						}
+						else
+						{
+							parent->right = element->left;
+							parent->right->parent = parent;
+						}
+					}
+					else
+					{
+						tree = element->left;
+					}
+					delete element;
+				}
+				// only has one right child
+				else if(onlyRightChild(element))
+				{
+					if(parent != nullptr)
+					{			
+						if(parent->left == element)
+						{
+							parent->left = element->right;
+							parent->left->parent = parent;
+						}
+						else
+						{
+							parent->right = element->right;
+							parent->right->parent = parent;
+						}
+					}
+					else
+					{
+						tree = element->right;
+					}
+					delete element;
+				}
+				else
+				{
+					// has both left and right
+					// have to find which has the max priority then that one comes first.
+					Node<T>* side = nullptr;
+					
+					if(parent != nullptr)
+					{			
+						if(parent->left == element)
+						{
+							side = parent->left;
+						}
+						else
+						{
+							side = parent->right;
+						}
+					}
+					else
+					{
+						side = tree;
+					}
+				
+					// check to see what child goes first
+					if(element->left->priority > element->right->priority)
+					{
+						side = element->left;
+						element->left->parent = parent;
+						// right will have to go into elements right
+						balanceTree(element->left, element->right, false);
+					}
+					else
+					{
+						side = element->right;
+						element->right->parent = parent;
+						// left will have to go into elements left
+						balanceTree(element->right, element->left, true);
+					}
+					delete element;
+				}
+			}
+			treeSize--;
+			return true;
+		}
+		return false;
+	}
+	
+	
 	bool isEmpty() const
 	{
 		return tree == nullptr;
@@ -408,5 +750,9 @@ public:
 			}
 			tree = nullptr;
 		}
+	}
+	unsigned int size() const
+	{
+		return treeSize;
 	}
 };

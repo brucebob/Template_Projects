@@ -1,17 +1,14 @@
-#include "TestSuite.h"
-#include "MemoryTracker.h"
-
-
 #include <iostream>
 #include <vector>
 #include <string>
 #include <algorithm>
 
+#include "TestSuite.h"
+#include "MemoryTracker.h"
 #include "Exports\BSTree.h"
 #include "List.h"
 #include "TreapTree.h"
 #include "PriorityQueue.h"
-
 
 // using the class for complex add tests
 class testingClass
@@ -78,15 +75,8 @@ TEST_ADD(PriorityQueue_CopyConstructor)
 {
 
 }
+
 // TreapTree Unit Testing
-TEST_ADD(TreapTree_RemoveElements)
-{
-
-}
-TEST_ADD(TreapTree_MemLeak)
-{
-
-}
 TEST_ADD(TreapTree_AddPrimitiveElements)
 {
 	TreapTree<int> tTree;
@@ -100,9 +90,59 @@ TEST_ADD(TreapTree_AddPrimitiveElements)
 
 	for(unsigned int x = 0; x < sList.size(); x++)
 	{		
-		TEST_CONDITION(tTree.findElement(sList[x]) != nullptr);
+		TEST_CONDITION(tTree.find(sList[x]) != nullptr);
 	}
 }
+TEST_ADD(TreapTree_MemLeak)
+{
+	MemoryTracker memtrack;
+	memtrack.FirstState();
+	TreapTree<int>* testTree = new TreapTree<int>;
+	for(unsigned int x = 0; x < 100; x++)
+	{
+		testTree->add(x);
+	}
+	delete testTree;
+	memtrack.SecondState();
+
+	TEST_CONDITION(memtrack.NormalBlocks() == 0);
+}
+TEST_ADD(TreapTree_RemoveElements)
+{
+	TreapTree<int> tTree;
+	SortedList<int> sList;
+	for(unsigned int x = 0; x < 1000; x++)
+	{
+		int y = (rand() % 5000) - 2500;
+		tTree.add(y);
+		sList.add(y);
+	}
+	std::cout << std::endl;
+	for(int x = 0; x < sList.size(); x++)
+	{
+		std::cout << x << std::endl;
+		tTree.remove(sList[x]);
+	}
+	int x = 0;
+}
+TEST_ADD(TreapTree_SizeTest)
+{
+	TreapTree<int> testTree;
+	for(unsigned int x = 0; x < 10; x++)
+	{
+		testTree.add(x);
+	}
+	TEST_CONDITION(testTree.size() == 10)
+}
+TEST_ADD(TreapTree_CopyConstructors)
+{
+	
+}
+TEST_ADD(TreapTree_AddComplexElements)
+{
+
+}
+
 // Binary Tree Unit Testing
 TEST_ADD(BSTree_SizeTest)
 {
@@ -137,7 +177,7 @@ TEST_ADD(BSTree_RemoveNodes)
   0,                 10,
                   9
 
-};
+	};
 	SortedList<int> sList;
 	for(unsigned int x = 0; x < 10; x++)
 	{
@@ -223,6 +263,7 @@ TEST_ADD(BSTree_CopyConstruct)
 	}
 	thirdTree = secondTree;
 }
+
 // Sorted List unit testing
 TEST_ADD(SortedList_MemLeak)
 {

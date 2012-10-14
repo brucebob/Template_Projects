@@ -71,7 +71,7 @@
     <ClCompile Include="Exports\TresTree.cpp">
       <Filter>Exports</Filter>
     </ClCompile>
-    <ClCompile Include="UnitTesting.cpp">
+    <ClCompile Include="UnitTesting.h">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
