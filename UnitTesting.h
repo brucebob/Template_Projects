@@ -3,10 +3,12 @@
 #include <string>
 #include <algorithm>
 
+// used for testing
 #include "testing tools\TestSuite.h"
 #include "testing tools\MemoryTracker.h"
-#include "containers\BSTree.h"
 
+// containers being tested
+#include "containers\BSTree.h"
 #include "containers\SortedList.h"
 #include "containers\TreapTree.h"
 #include "containers\PriorityQueue.h"
