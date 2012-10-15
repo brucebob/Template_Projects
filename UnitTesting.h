@@ -3,12 +3,13 @@
 #include <string>
 #include <algorithm>
 
-#include "TestSuite.h"
-#include "MemoryTracker.h"
-#include "Exports\BSTree.h"
-#include "List.h"
-#include "TreapTree.h"
-#include "PriorityQueue.h"
+#include "testing tools\TestSuite.h"
+#include "testing tools\MemoryTracker.h"
+#include "containers\BSTree.h"
+
+#include "containers\SortedList.h"
+#include "containers\TreapTree.h"
+#include "containers\PriorityQueue.h"
 
 // using the class for complex add tests
 class testingClass

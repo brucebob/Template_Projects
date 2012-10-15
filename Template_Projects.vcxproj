@@ -75,25 +75,10 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Exports\BSTree.h" />
-    <ClInclude Include="Exports\OldList.h" />
-    <ClInclude Include="Exports\Treap.h" />
-    <ClInclude Include="Exports\TresTree.h" />
-    <ClInclude Include="List.h" />
-    <ClInclude Include="MemoryTracker.h" />
-    <ClInclude Include="PriorityQueue.h" />
-    <ClInclude Include="StopWatch.h" />
-    <ClInclude Include="TestSuite.h" />
-    <ClInclude Include="TreapTree.h" />
+    <ClCompile Include="Template_Projects.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Exports\TresTree.cpp" />
-    <ClCompile Include="List.cpp" />
-    <ClCompile Include="MemoryTracker.cpp" />
-    <ClCompile Include="StopWatch.cpp" />
-    <ClCompile Include="Template_Projects.cpp" />
-    <ClCompile Include="TestSuite.cpp" />
-    <ClCompile Include="UnitTesting.h" />
+    <ClInclude Include="UnitTesting.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
