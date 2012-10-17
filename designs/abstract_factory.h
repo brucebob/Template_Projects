@@ -13,7 +13,6 @@ namespace factory
 		}
 	};
 	
-	
 	template<typename T>
 	class BaceProcessFactory
 	{
@@ -21,16 +20,10 @@ namespace factory
 		std::list<BaceProcess<T>*> process_list;
 	public:
 		virtual void config()=0;
+		
 		BaceProcessFactory<T>()
 		{
 
-		}
-		void process(T& t)
-		{
-			for(std::list<BaceProcess<T>*>::iterator itor = process_list.begin(); itor != process_list.end(); itor++)
-			{
-				(*itor)->process(t);
-			}
 		}
 		BaceProcessFactory<T>& operator=(const BaceProcessFactory<T>& t)
 		{
@@ -43,6 +36,13 @@ namespace factory
 		BaceProcessFactory<T>(const BaceProcessFactory<T>& t)
 		{
 			process_list = t.process_list;
+		}
+		void process(T& t)
+		{
+			for(std::list<BaceProcess<T>*>::iterator itor = process_list.begin(); itor != process_list.end(); itor++)
+			{
+				(*itor)->process(t);
+			}
 		}
 	protected:
 		void add_process(BaceProcess<T>* t)

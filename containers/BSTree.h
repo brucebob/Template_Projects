@@ -505,9 +505,6 @@ public:
 	
 	
 	for the in order may make a array of pointer so i can access like an array and when it's updated it's sync
-	T* t = new T[size];
-
-	
-	
+	T* t = new T[size];	
 	*/
 };

@@ -61,7 +61,7 @@ private:
 	// based on the left and right of the parent
 	// which is 2 * index + 2 for right
 	// 2 * index + 1 for left
-	void percolateDown(int index)
+	void percolateDown(unsigned int index)
 	{
 		if((2 * index + 2) <= pQue.size() - 1)
 		{

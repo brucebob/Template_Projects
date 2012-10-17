@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "testing tools/TestSuite.h"
+#include "UnitTesting.h"
 
 int main(int argc, char* argv[])
 {
@@ -12,6 +12,5 @@ int main(int argc, char* argv[])
 	{
 		std::cout << e.what() << std::endl;
 	}
-
 	return 0;
 }

@@ -39,6 +39,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -49,11 +50,17 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ShowIncludes>false</ShowIncludes>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <AdditionalIncludeDirectories>C:\Users\BruceBob\Documents\Visual Studio 2010\Projects\Template_Projects\Template_Projects\testing_tools;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <CustomBuildStep>
+      <Inputs>%(Inputs)</Inputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -76,8 +83,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Template_Projects.cpp" />
+    <ClCompile Include="testing_tools\MemoryTracker.cpp" />
+    <ClCompile Include="testing_tools\StopWatch.cpp" />
+    <ClCompile Include="testing_tools\TestSuite.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="testing_tools\MemoryTracker.h" />
+    <ClInclude Include="testing_tools\StopWatch.h" />
+    <ClInclude Include="testing_tools\TestSuite.h" />
     <ClInclude Include="UnitTesting.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
