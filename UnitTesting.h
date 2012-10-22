@@ -60,7 +60,6 @@ namespace doublylinkedlist
 namespace linklist
 {
 	// #TODO need to add test for faults 
-
 	TEST_ADD(LinkedList_AddPrimitiveElements)
 	{
 		LinkedList<int> list;
@@ -87,7 +86,8 @@ namespace linklist
 
 		LinkedList<int> f(g.begin() + 2);
 		g.clear();
-		LinkedList<int> h = f;
+		LinkedList<int> h;
+		h = f;
 		f.clear();
 		LinkedList<int> i(h);
 
@@ -147,9 +147,11 @@ namespace linklist
 		{
 			list.push_front(x);
 		}
+		std::cout << std::endl;
+		LinkedList<int>::forward_iterator testEnd = list.find(0);
 		for(LinkedList<int>::forward_iterator itor = list.begin(); itor != list.end(); itor++)
 		{
-			std::cout << *itor << " ";
+			std::cout << *itor << " ";	
 		}
 	
 	}

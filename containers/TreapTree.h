@@ -13,7 +13,7 @@ private:
 	template<typename T> 
 	struct Node
 	{
-		T t;
+		T data;
 		int priority;
 		struct Node<T>* left;
 		struct Node<T>* right;
@@ -31,7 +31,7 @@ private:
 		Node<T>* newNode = new Node<T>;
 		if(newNode != nullptr)
 		{
-			newNode->t = t;
+			newNode->data = t;
 			newNode->parent = nullptr;
 			newNode->right = nullptr;
 			newNode->left = nullptr;
@@ -48,7 +48,7 @@ private:
 		Node<T>* newNode;
 		if(newNode != nullptr)
 		{
-			newNode->t = t;
+			newNode->data = t;
 			newNode->parent = nullptr;
 			newNode->right = nullptr;
 			newNode->left = nullptr;
@@ -65,11 +65,11 @@ private:
 		Node<T>* transPtr = root;
 		while(transPtr != nullptr)
 		{
-			if(transPtr->t > t)
+			if(transPtr->data > t)
 			{
 				transPtr = transPtr->left;
 			}
-			else if(transPtr->t < t)
+			else if(transPtr->data < t)
 			{
 				transPtr = transPtr->right;
 			}
@@ -197,7 +197,7 @@ public:
 			Node<T>* addedNode = nullptr;
 			while(transPtr != nullptr)
 			{
-				if(transPtr->t > t)
+				if(transPtr->data > data)
 				{
 					if(transPtr->left == nullptr)
 					{
@@ -266,7 +266,7 @@ public:
 			Node<T>* addedNode = nullptr;
 			while(transPtr != nullptr)
 			{
-				if(transPtr->t > t)
+				if(transPtr->data > t)
 				{
 					if(transPtr->left == nullptr)
 					{
@@ -381,7 +381,7 @@ public:
 	{
 		if(tree != nullptr)
 		{
-			return &findNode(tree, t)->t; 
+			return &findNode(tree, t)->data; 
 		}
 		else
 		{
@@ -400,7 +400,6 @@ public:
 			return nullptr;
 		}
 	}
-	
 	template<typename TT>
 	bool remove(const TT& t)
 	{
@@ -721,8 +720,6 @@ public:
 		}
 		return false;
 	}
-	
-	
 	bool isEmpty() const
 	{
 		return tree == nullptr;

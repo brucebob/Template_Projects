@@ -1,7 +1,8 @@
 #pragma once
 #include <list>
-
-
+		
+		// #TODO  going to have bi direction type iterator
+		// Add fault tests for the exceptions
 /*
 *
 *		BSTree is a simple binary search tree
@@ -14,11 +15,11 @@ template <typename T>
 class BSTree
 {
 private:
-	// the stuct of tree
+	// the struct of tree
 	template <typename T>
 	struct Node
 	{
-		T d;
+		T data;
 		struct Node<T>* Left;
 		struct Node<T>* Right;
 	};
@@ -32,7 +33,7 @@ private:
 		Node<T>* newNode = new Node<T>;
 		if(newNode != nullptr)
 		{
-			newNode->d = t;
+			newNode->data = t;
 			newNode->Right = nullptr;
 			newNode->Left = nullptr;
 			return newNode;
@@ -59,11 +60,11 @@ private:
 				return root;
 			}
 			// Look in the left and the right side of the tree.
-			if (node->d < root->d)
+			if (node->data < root->data)
 			{
 				return parentOf(root->Left, node);
 			}
-			else if (node->d > root->d)
+			else if (node->data > root->data)
 			{
 				return parentOf(root->Right, node);
 			}
@@ -130,11 +131,11 @@ private:
 		Node<T>* transPtr = root;
 		while(transPtr != nullptr)
 		{
-			if(transPtr->d > t)
+			if(transPtr->data > t)
 			{
 				transPtr = transPtr->Left;
 			}
-			else if(transPtr->d < t)
+			else if(transPtr->data < t)
 			{
 				transPtr = transPtr->Right;
 			}
@@ -165,7 +166,7 @@ private:
 				{
 					stack.push_back(stack.front()->Right);
 				}
-				newRoot = addElement(newRoot, stack.front()->d);
+				newRoot = addElement(newRoot, stack.front()->data);
 				stack.pop_front();
 			}
 
@@ -186,7 +187,7 @@ private:
 			Node<T>* transPtr = root;
 			while(transPtr != nullptr)
 			{
-				if(transPtr->d > element)
+				if(transPtr->data > element)
 				{
 					if(transPtr->Left == nullptr)
 					{
@@ -255,7 +256,7 @@ public:
 	{
 		if(tree != nullptr)
 		{
-			return &findNode(tree, t)->d; 
+			return &findNode(tree, t)->data; 
 		}
 		else
 		{
@@ -271,7 +272,7 @@ public:
 	{
 		if(tree != nullptr)
 		{
-			return &findNode(tree, t)->d; 
+			return &findNode(tree, t)->data; 
 		}
 		else
 		{
@@ -401,7 +402,7 @@ public:
 		}
 		else
 		{
-			return &maxLeaf(tree)->d;
+			return &maxLeaf(tree)->data;
 		}
 	}
 	// returns the min element in the tree mutable
@@ -413,7 +414,7 @@ public:
 		}
 		else
 		{
-			return &minLeaf(tree)->d;
+			return &minLeaf(tree)->data;
 		}
 	}
 	// returns the max element and it's nonmutable
@@ -474,37 +475,5 @@ public:
 		return totalElements;
 	}
 
-	// going to have bi direction type iterators with a vector of *
-
-	// in order is only going to be a forward iterator
-
-	// for this to be not all the element i have to keep a list of the list till the min node and as i
-	// ++ throught make sure they don't have a right.
-	/*
-	class inOrderIterator
-	{
-	private:
-		std::list<Node<T>*> ioiList;
-	public:
-		void operator++(int)
-		{
-			cSpot++;
-		}
-		T& operator*()
-		{
-			return ioiList[0];
-		}
-		T* operator->() const
-		{
-			return &ioiList[0];
-		}
-		inOrderIterator(
-	};
 	
-	
-	
-	
-	for the in order may make a array of pointer so i can access like an array and when it's updated it's sync
-	T* t = new T[size];	
-	*/
 };
