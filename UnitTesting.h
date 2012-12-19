@@ -9,7 +9,7 @@
 
 // containers being tested
 #include "containers/BSTree.h"
-#include "containers/SortedList.h"
+#include "containers/sorted_list.h"
 #include "containers/TreapTree.h"
 #include "containers/PriorityQueue.h"
 #include "containers/LinkedList.h"
@@ -19,12 +19,19 @@
 class testingClass
 {
 private:
-
+	int a;
 public:
 	const testingClass& operator=(const testingClass& t);
-	bool operator<(int);
-	bool operator>(int);
+	bool operator<(const testingClass& b)
+	{
+		return a < b.a;
+	}
+	bool operator>(const testingClass& b)
+	{
+		return a > b.a;
+	}
 };
+/*
 namespace doublylinkedlist
 {
 	TEST_ADD(DoublyLinkedList_PrimitiveAdd)
@@ -194,13 +201,13 @@ namespace priorityqueue
 	TEST_ADD(PriorityQueue_MinQue)
 	{
 		PriorityQueue<int> pQue(MIN);
-		SortedList<int> sList;
+		sorted_vector<int> sList;
 	
 		for(unsigned int x = 0; x < 1000; x++)
 		{
 			int y = (rand() % 5000) - 2500;
 			pQue.add(y);
-			sList.add(y);
+			sList.push(y);
 		}
 		for(unsigned int x = 0; x < sList.size(); x++)
 		{		
@@ -210,12 +217,12 @@ namespace priorityqueue
 	TEST_ADD(PriorityQueue_AddPrimitiveElements)
 	{
 		PriorityQueue<int> pQue;
-		SortedList<int> sList;
+		sorted_vector<int> sList;
 		for(unsigned int x = 0; x < 1000; x++)
 		{
 			int y = (rand() % 5000) - 2500;
 			pQue.add(y);
-			sList.add(y);
+			sList.push(y);
 		}
 	
 		for(unsigned int x = sList.size(); x > 0; x--)
@@ -283,12 +290,12 @@ namespace treaptree
 	TEST_ADD(TreapTree_RemoveElements)
 	{
 		TreapTree<int> tTree;
-		SortedList<int> sList;
+		sorted_vector<int> sList;
 		for(unsigned int x = 0; x < 1000; x++)
 		{
 			int y = (rand() % 5000) - 2500;
 			tTree.add(y);
-			sList.add(y);
+			sList.push(y);
 		}
 		for(unsigned int x = 0; x < sList.size(); x++)
 		{
@@ -329,12 +336,12 @@ namespace bstree
 	TEST_ADD(BSTree_MinAndMax)
 	{
 		BSTree<int> tree;
-		SortedList<int> sList;
+		sorted_vector<int> sList;
 		for(int x = 0; x < 50; x++)
 		{
 			int randNum = (int)rand() % 1000 - 500;
 			tree.add(randNum);
-			sList.add(randNum);
+			sList.push(randNum);
 		}
 		TEST_CONDITION(*tree.minElement() == sList[0]);
 		TEST_CONDITION(*tree.maxElement() == sList[sList.size() - 1]);
@@ -351,10 +358,10 @@ namespace bstree
 					  9
 
 		};
-		SortedList<int> sList;
+		sorted_vector<int> sList;
 		for(unsigned int x = 0; x < 10; x++)
 		{
-			sList.add(arr[x]);
+			sList.push(arr[x]);
 		}
 	
 
@@ -413,12 +420,12 @@ namespace bstree
 	TEST_ADD(BSTree_CopyConstruct)
 	{
 		BSTree<int>* firstTree = new BSTree<int>();
-		SortedList<int> sList;
+		sorted_vector<int> sList;
 		for(int x = 0; x < 10; x++)
 		{
 			int randNum = (int)rand()% 1000 - 500;
 			firstTree->add(randNum);
-			sList.add(randNum);
+			sList.push(randNum);
 		}
 
 		const BSTree<int> secondTree(*firstTree);
@@ -437,33 +444,35 @@ namespace bstree
 		thirdTree = secondTree;
 	}
 };
+*/
+
 // Sorted List unit testing
 namespace sortedlist
 {
-	TEST_ADD(SortedList_MemLeak)
+	TEST_ADD(sorted_vector_MemLeak)
 	{
 		MemoryTracker memTrace;
 		memTrace.FirstState();
-		SortedList<int>* mainList = new SortedList<int>();
+		sorted_vector<int>* mainList = new sorted_vector<int>();
 		for(unsigned int x = 1; x < 10; x += 2)
 		{
-			mainList->add(x);
+			mainList->push(x);
 		}
 		delete mainList;
 		memTrace.SecondState();
 		TEST_CONDITION(memTrace.NormalBlocks() == 0);
 	}
-	TEST_ADD(SortedList_Removal)
+	TEST_ADD(sorted_vector_Removal)
 	{
 		std::vector<int> list1;
 		std::vector<int> list2;
-		SortedList<int> firstList;
+		sorted_vector<int> firstList;
 		for(unsigned int x = 0; x < 10; x++)
 		{
 			list1.push_back(x);
-			firstList.add(x);
+			firstList.push(x);
 		}
-		SortedList<int> secondList = firstList;
+		sorted_vector<int> secondList = firstList;
 		std::reverse(list1.begin(), list1.end());
 		for(std::vector<int>::iterator itor = list1.begin(); itor != list1.end(); itor++)
 		{
@@ -476,17 +485,17 @@ namespace sortedlist
 		}
 		TEST_CONDITION(secondList.size() == 0);
 	}
-	TEST_ADD(SortedList_MergeTest)
+	TEST_ADD(sorted_vector_MergeTest)
 	{
-		SortedList<int> list1;
-		SortedList<int> list2;
+		sorted_vector<int> list1;
+		sorted_vector<int> list2;
 		for(unsigned int x = 1; x < 10; x += 2)
 		{
-			list1.add(x);
+			list1.push(x);
 		}
 		for(unsigned int x = 0; x < 10; x += 2)
 		{
-			list2.add(x);
+			list2.push(x);
 		}
 		list1.merge(list2);
 		for(unsigned int x = 0; x < 10; x++)
@@ -497,7 +506,7 @@ namespace sortedlist
 
 		std::vector<int> list3;
 		std::vector<int> list4;
-		SortedList<int> sList;
+		sorted_vector<int> sList;
 		for(unsigned int x = 1; x < 10; x += 2)
 		{
 			list3.push_back(x);
@@ -514,40 +523,53 @@ namespace sortedlist
 		}
 		TEST_CONDITION(list3.size() == 0 && list4.size() == 0);
 	}
-	TEST_ADD(SortedList_VectorToSortedList)
+	TEST_ADD(sorted_vector_VectorTosorted_vector)
 	{
 		std::vector<int> vList;
 		for(unsigned int x = 0; x < 10; x++)
 		{
 			vList.push_back(x);
 		}
-		SortedList<int> sList(vList);
+		sorted_vector<int> sList(vList);
 
 		for(int x = 0; x < 10; x++)
 		{
 			TEST_CONDITION(sList[x] == x);
 		}
 	}
-	TEST_ADD(SortedList_AddComplexElements)
+	TEST_ADD(sorted_vector_AddComplexElements)
 	{
 	
 	}
-	TEST_ADD(SortedList_AddPrimativeElements)
+	TEST_ADD(sorted_vector_AddPrimativeElements)
 	{
 		int randomNum = 10;
 
-		SortedList<int> sList;
+		sorted_vector<int> sList;
 		std::vector<int> vList;
 		for(int x = 0; x < randomNum; x++)
 		{
 			int y = (rand() % 5000) - 2500;
 			vList.push_back(y);
-			sList.add(y);
+			sList.push(y);
 		}
 		std::sort(vList.begin(), vList.end());
 		for(unsigned int x = 0; x < vList.size(); x++)
 		{
 			TEST_CONDITION(vList[x] == sList[x]);
 		}
+	}
+	TEST_ADD(sorted_vector_PointerSort)
+	{
+		sorted_vector<int*, pointer_compare_int<int*>> sorted_list;
+		sorted_list.push(new int(3));
+		sorted_list.push(new int(2));
+		sorted_list.push(new int(10));
+		sorted_list.push(new int(-5));
+		sorted_list.push(new int(9));
+		sorted_list.push(new int(1));
+		int* d = new int(4);
+
+		sorted_list.positionOf(d);
 	}
 };
