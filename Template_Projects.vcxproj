@@ -82,12 +82,22 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="containers\TresTree.cpp" />
     <ClCompile Include="Template_Projects.cpp" />
     <ClCompile Include="testing_tools\MemoryTracker.cpp" />
     <ClCompile Include="testing_tools\StopWatch.cpp" />
     <ClCompile Include="testing_tools\TestSuite.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="containers\BSTree.h" />
+    <ClInclude Include="containers\compare_function.h" />
+    <ClInclude Include="containers\DoublylinkedList.h" />
+    <ClInclude Include="containers\LinkedList.h" />
+    <ClInclude Include="containers\PriorityQueue.h" />
+    <ClInclude Include="containers\Treap.h" />
+    <ClInclude Include="containers\TreapTree.h" />
+    <ClInclude Include="containers\TresTree.h" />
+    <ClInclude Include="designs\abstract_factory.h" />
     <ClInclude Include="testing_tools\MemoryTracker.h" />
     <ClInclude Include="testing_tools\StopWatch.h" />
     <ClInclude Include="testing_tools\TestSuite.h" />
