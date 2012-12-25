@@ -45,5 +45,6 @@
     <ClInclude Include="containers\TreapTree.h" />
     <ClInclude Include="containers\TresTree.h" />
     <ClInclude Include="containers\compare_function.h" />
+    <ClInclude Include="containers\sorted_list.h" />
   </ItemGroup>
 </Project>

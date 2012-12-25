@@ -94,6 +94,7 @@
     <ClInclude Include="containers\DoublylinkedList.h" />
     <ClInclude Include="containers\LinkedList.h" />
     <ClInclude Include="containers\PriorityQueue.h" />
+    <ClInclude Include="containers\sorted_list.h" />
     <ClInclude Include="containers\Treap.h" />
     <ClInclude Include="containers\TreapTree.h" />
     <ClInclude Include="containers\TresTree.h" />

@@ -1,5 +1,5 @@
 #pragma once
-
+#include "compare_function.h"
 template<typename T>
 class DoublyLinkedList
 {
@@ -28,8 +28,11 @@ private:
 	}
 	void init()
 	{
-		tail = nullptr;
-		head = nullptr;
+		tail = new Node<T>;
+		head = new Node<T>;
+		head->next = tail;
+		tail->before = head;
+		head->before = tail->next = nullptr;
 		list_size = 0;
 	}
 public:
@@ -169,18 +172,19 @@ public:
 		{
 			throw std::exception("DoublyLinkedList: No elements");
 		}
-		Node<T>* dlt_node = tail;
-		if(dlt_node->before != nullptr)
+		Node<T>* delete_ptr = tail->before;
+		if(tail->before == head->next)
 		{
-			tail = tail->before;
-			tail->next = nullptr;
+			head->next = tail;
+			tail->before = head;
 		}
 		else
 		{
-			tail = head = nullptr;
+			tail->before = tail->before->before;
+			tail->before->next = tail;
 		}
 		list_size--;
-		delete dlt_node;
+		delete delete_ptr;
 	}
 	void pop_front()
 	{
@@ -188,31 +192,40 @@ public:
 		{
 			throw std::exception("DoublyLinkedList: No elements");
 		}
-		Node<T>* dlt_node = head;
+		Node<T>* delete_ptr = head->next;
 
-		if(dlt_node->next != nullptr)
+		if(head->next == tail->before)
 		{
-			head = head->next;
-			head->before = nullptr;
+			head->next = tail;
+			tail->before = head;
 		}
 		else
 		{
-			head = tail = nullptr;
+			head->next = head->next->next;
+			head->next->before = head;
 		}
 		list_size--;
-		delete dlt_node;
+		delete delete_ptr;
 	}
 	T& front() const
 	{
-		return head->data;
+		if(empty())
+		{
+			throw std::exception("no elements");
+		}
+		return head->next->data;
 	}
 	T& back() const
 	{
-		return tail->data;
+		if(empty())
+		{
+			throw std::exception("no elements");
+		}
+		return tail->before->data;
 	}
 	iterator begin()
 	{
-		return iterator(head);
+		return iterator(head->next);
 	}
 	iterator end()
 	{
@@ -220,35 +233,45 @@ public:
 	}
 	void push_back(const T& t)
 	{
+		Node<T>* temp_ptr = make_node(t);
 		if(empty())
 		{
-			head = tail = make_node(t);
+			head->next = temp_ptr;
+			tail->before = temp_ptr;
+			temp_ptr->before = head;
+			temp_ptr->next = tail;
 		}
 		else
 		{
-			tail->next = make_node(t);
-			tail->next->before = tail;
-			tail = tail->next;
+			temp_ptr->before = tail->before;
+			temp_ptr->next = tail;
+			tail->before->next = temp_ptr;
+			tail->before = temp_ptr;
 		}
 		list_size++;
 	}
 	void push_front(const T& t)
 	{
-		Node<T>* new_head = make_node(t);
+		Node<T>* temp_ptr = make_node(t);
 		if(empty())
 		{
-			head = tail = new_head;
+			head->next = temp_ptr;
+			tail->before = temp_ptr;
+			temp_ptr->before = head;
+			temp_ptr->next = tail;
 		}
 		else
 		{
-			new_head->next = head;
-			head->before = new_head;
-			head = new_head;
+			temp_ptr->next = head->next;
+			temp_ptr->before = head;
+			head->next->before = temp_ptr;
+			head->next = temp_ptr;
 		}
 		list_size++;
 	}
 	void clear()
 	{
+		// need to redo this.
 		while(head != nullptr)
 		{
 			Node<T>* dlt_node = head;

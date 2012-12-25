@@ -14,7 +14,8 @@
 #include "containers/PriorityQueue.h"
 #include "containers/LinkedList.h"
 #include "containers/DoublylinkedList.h"
-
+#include "containers/content_tree.h"
+#include "containers/hash_table.h"
 // using the class for complex add tests
 class testingClass
 {
@@ -62,7 +63,7 @@ namespace doublylinkedlist
 	{
 
 	}
-};
+};*/
 // LinkedList Unit Testing
 namespace linklist
 {
@@ -104,8 +105,8 @@ namespace linklist
 	{
 		MemoryTracker tracker;
 		LinkedList<int> list;
-	
 		tracker.FirstState();
+		
 		for(unsigned int x = 0; x < 100; x++)
 		{
 			list.push_front(x);
@@ -113,6 +114,17 @@ namespace linklist
 		list.clear();
 		tracker.SecondState();
 		TEST_CONDITION(tracker.NormalBlocks() ==0);
+
+
+		tracker.FirstState();
+		LinkedList<int>* list2 = new LinkedList<int>;
+		for(unsigned int x = 0;x < 10; x++)
+		{
+			list2->push_front(x);
+		}
+		delete list2;
+		tracker.SecondState();
+		TEST_CONDITION(tracker.NormalBlocks() == 0);
 	}
 	TEST_ADD(LinkedList_Copy)
 	{
@@ -140,6 +152,15 @@ namespace linklist
 			TEST_CONDITION(list.front() ==  9 - x);
 			list.pop_front();
 		}
+		for(unsigned int x = 0; x < 10; x++)
+		{
+			list.push_front(x);
+		}
+		for(unsigned int x = 0; x < 10; x++)
+		{
+			TEST_CONDITION(list.back() == x);
+			list.pop_back();
+		}
 		TEST_CONDITION(list.empty());
 	}
 	TEST_ADD(LinkedList_ComplexElements)
@@ -154,13 +175,12 @@ namespace linklist
 		{
 			list.push_front(x);
 		}
-		std::cout << std::endl;
-		LinkedList<int>::forward_iterator testEnd = list.find(0);
+		int counter = 0;
 		for(LinkedList<int>::forward_iterator itor = list.begin(); itor != list.end(); itor++)
 		{
-			std::cout << *itor << " ";	
+			counter++;
 		}
-	
+		TEST_CONDITION(counter == 10);
 	}
 	TEST_ADD(LinkedList_Size)
 	{
@@ -189,12 +209,11 @@ namespace linklist
 		g.push_back(6);
 		g.push_back(2);
 		LinkedList<int>::forward_iterator i = g.find(4);
+		TEST_CONDITION(g.find(4).valid() == false);
 
-		i.valid() ? printf("%d", *i) : printf("nope.jpg");
-
-	
 	}
 };
+/*
 // PriorityQueue Unit Testing
 namespace priorityqueue
 {
@@ -572,4 +591,51 @@ namespace sortedlist
 
 		sorted_list.positionOf(d);
 	}
+};
+namespace hashtable
+{
+	TEST_ADD(hashtable_removeelements)
+	{
+
+	}
+	TEST_ADD(hashtable_addelements)
+	{
+
+	}
+	TEST_ADD(hashtable_complex)
+	{
+
+	}
+	TEST_ADD(hashtable_copy)
+	{
+
+	}
+	TEST_ADD(hashtable_find)
+	{
+		
+	}
+	TEST_ADD(hashtable_memtest)
+	{
+		MemoryTracker mem;
+		mem.FirstState();
+		hash_table<int>* h = new hash_table<int>(40);
+
+		for(unsigned int x = 0; x < 100; x++)
+		{
+			h->add((int)rand() % 100);
+		}
+		h->rehash(5);
+		h->print_table();
+		delete h;
+
+		mem.SecondState();
+
+		TEST_CONDITION(mem.NormalBlocks() == 0);
+
+
+	}
+};
+namespace contenttree
+{
+
 };

@@ -2,6 +2,7 @@
 #include <exception>
 /*
 		#TODOs
+		done: change the way they work with dummy front and back.
 		need a const iterator
 		need to do fault test to test exceptions
 		need to add U ref for push back
@@ -23,6 +24,16 @@ private:
 		T data;
 		Node<T>* next;
 	};
+	unsigned int list_size;
+	Node<T>* head;
+	Node<T>* tail;
+	void init()
+	{
+		head = new Node<T>;
+		head->next = new Node<T>;
+		tail = head;
+		tail->next->next = nullptr;
+	}
 	Node<T>* make_node(const T& t)
 	{
 		Node<T>* rtn_ptr = new Node<T>;
@@ -34,15 +45,6 @@ private:
 		rtn_ptr->next = nullptr;
 		return rtn_ptr;
 	}
-	void init()
-	{
-		head = nullptr;
-		tail = nullptr;
-		list_size = 0;
-	}
-	unsigned int list_size;
-	Node<T>* head;
-	Node<T>* tail;
 public:
 	// this inner class help the linklist transverse through it nodes and keeps the user away from messing up the list.
 	class forward_iterator
@@ -73,7 +75,7 @@ public:
 		}
 		void operator++(int)
 		{
-			if(current_pos == nullptr)
+			if(current_pos->next == nullptr)
 			{
 				throw std::exception("iterator: out of range error");
 			}
@@ -95,7 +97,7 @@ public:
 			Node<T>* trans_ptr = current_pos;
 			while(n != 0)
 			{
-				if(trans_ptr == nullptr)
+				if(trans_ptr->next == nullptr)
 				{
 					throw std::exception("iterator: out of range:");
 				}
@@ -106,7 +108,7 @@ public:
 		}
 		T* operator->() const
 		{
-			if(current_pos == nullptr)
+			if(current_pos->next == nullptr)
 			{
 				throw std::exception("iterator: out of range");
 			}
@@ -114,7 +116,7 @@ public:
 		}
 		T& operator*() const
 		{
-			if(current_pos == nullptr)
+			if(current_pos->next == nullptr)
 			{
 				throw std::exception("iterator: out of range");
 			}
@@ -124,20 +126,26 @@ public:
 		// it doesn't blow up the program
 		bool valid() const
 		{
-			return current_pos == nullptr ? false : true;
+			if(current_pos == nullptr || current_pos->next == nullptr)
+			{
+				return false;
+			}
+			return true;
 		}
 	};
 	// basic constructor sets values to 0 and points to nullptr
 	LinkedList<T>()
 	{
 		init();
+		list_size = 0;
 	}
 	// a deep copy constructor
 	LinkedList<T>(const LinkedList& t)
 	{
 		init();
-		Node<T>* transptr = t.head;
-		while(transptr != nullptr)
+		list_size = 0;
+		Node<T>* transptr = t.head->next;
+		while(transptr != t.tail->next)
 		{
 			push_back(transptr->data);
 			transptr = transptr->next;
@@ -150,8 +158,9 @@ public:
 		{
 			clear();
 			init();
-			Node<T>* transptr = t.head;
-			while(transptr != nullptr)
+			list_size = 0;
+			Node<T>* transptr = t.head->next;
+			while(transptr != t.tail->next)
 			{
 				push_back(transptr->data);
 				transptr = transptr->next;
@@ -163,6 +172,7 @@ public:
 	LinkedList<T>(const forward_iterator& t)
 	{
 		init();
+		list_size = 0;
 		forward_iterator trans_itor = t;
 		while(trans_itor.valid())
 		{
@@ -173,30 +183,49 @@ public:
 	// once delete or the class falls out of scope it calls clear and remove all the nodes
 	~LinkedList<T>()
 	{
-		clear();
+		while(head != nullptr)
+		{
+			Node<T>* delete_ptr = head;
+			head = head->next;
+			delete delete_ptr;
+		}
 	}
 	// removes the front most element from the linklist
 	// throw if the linklist is empty
 	void pop_front()
 	{
-		if(head == nullptr)
+		if(empty())
 		{
 			throw std::exception("LinkedList: no elements in container");
 		}
-		
-		Node<T>* delptr = head;
-		head = head->next;
-		if(list_size == 1)
-		{
-			tail = nullptr;
-		}
+		Node<T>* delete_ptr = head->next;
+		head->next = head->next->next;
 		list_size--;
-		delete delptr;
+		delete delete_ptr;
+	}
+	// removes the last most element in the list this takes O(n) to remove this element.
+	void pop_back()
+	{
+		if(empty())
+		{
+			throw std::exception("LinkedList: no elements in container");
+		}
+		Node<T>* trans_ptr = head;
+		Node<T>*delete_ptr = nullptr;
+		while(trans_ptr->next != tail)
+		{
+			trans_ptr = trans_ptr->next;
+		}
+		delete_ptr = trans_ptr->next;
+		trans_ptr->next = trans_ptr->next->next;
+		tail = trans_ptr;
+		list_size--;
+		delete delete_ptr;
 	}
 	// return a pointer to the front of the element of linklist
 	forward_iterator begin()
 	{
-		return forward_iterator(head);
+		return forward_iterator(head->next);
 	}
 	// return a pointer to the last element in the linklist
 	forward_iterator end()
@@ -207,17 +236,17 @@ public:
 	// throw if the linklist is empty
 	T& front() const
 	{
-		if(head == nullptr)
+		if(head->next == tail->next)
 		{
 			throw std::exception("LinkedList: out of range no elements");
 		}
-		return head->data;
+		return head->next->data;
 	}
 	// returns the element at the back of the linklist
 	// throw if the linklist is empty
 	T& back() const
 	{
-		if(tail == nullptr)
+		if(empty())
 		{
 			throw std::exception("LinkedList: out of range no elements");
 		}
@@ -229,12 +258,17 @@ public:
 	{
 		if(empty())
 		{
-			head = tail = make_node(t);
+			Node<T>* temp_node = make_node(t);
+			temp_node->next = head->next;
+			head->next = temp_node;
+			tail = temp_node;
 		}
 		else
 		{
-			tail->next = make_node(t);
-			tail = tail->next;
+			Node<T>* temp_node = make_node(t);
+			temp_node->next = tail->next;
+			tail->next = temp_node;
+			tail = temp_node;
 		}
 		list_size++;
 	}
@@ -244,28 +278,33 @@ public:
 	{
 		if(empty())
 		{
-			head = tail = make_node(t);
+			Node<T>* temp_node = make_node(t);
+			temp_node->next = head->next;
+			head->next = temp_node;
+			tail = temp_node;
 		}
 		else
 		{
-			Node<T>* new_head = make_node(t);
-			new_head->next = head;
-			head = new_head;
+			Node<T>* temp_node = make_node(t);
+			temp_node->next = head->next;
+			head->next = temp_node;
 		}
 		list_size++;
 	}
 	// removes all Nodes in the linklist and sets the size back to 0
 	void clear()
 	{
-		while(head != nullptr)
+		Node<T>* trans_ptr = head->next;
+		Node<T>* end_ptr = tail->next;
+		while(trans_ptr != end_ptr)
 		{
-			Node<T>* delptr = head;
-			head = head->next;
-			delete delptr;
+			Node<T>* delete_ptr = trans_ptr;
+			trans_ptr = trans_ptr->next;
+			delete delete_ptr;
 		}
+		tail = head;
+		head->next = end_ptr;
 		list_size = 0;
-		head = nullptr;
-		tail = nullptr;
 	}
 	// return a boolean that figures out if the linklist is empty
 	bool empty() const
@@ -284,7 +323,7 @@ public:
 	{
 		Node<T>* trans_ptr = head;
 
-		while(trans_ptr != nullptr)
+		while(trans_ptr->next != nullptr)
 		{
 			if(trans_ptr->data == t)
 			{
@@ -294,41 +333,35 @@ public:
 		}
 		return forward_iterator(nullptr);
 	}
-	// return a boolean of if it was found
-	// if false the item you inputed is not in the linklist
+	// throws no element found if the element was not found
 	template<typename TT>
-	bool remove(const TT t)
+	void remove(const TT t)
 	{
-		if(head != nullptr && head->data == t)
+		if(empty())
 		{
-			Node<T>* dlt_ptr = head;
-			if(head->next == nullptr)
-			{
-				tail = head = nullptr;
-			}
-			else
-			{
-				head = head->next;
-			}
-			list_size--;
-			delete dlt_ptr;
-			return true;
+			throw std::exception("No elements in link_list.");
 		}
-		else
+
+		Node<T>* trans_ptr = head;
+		while(trans_ptr->next != tail->next)
 		{
-			Node<T>* trans_ptr = head;
-			while(trans_ptr->next != nullptr)
+			if(trans_ptr->next->data == t)
 			{
-				if(trans_ptr->next->data == t)
+				Node<T>* delete_ptr = trans_ptr->next;
+				if(trans_ptr->next == tail)
 				{
-					Node<T>* dlt_ptr = trans_ptr->next;
-					trans_ptr->next = trans_ptr->next->next;
-					list_size--;
-					delete dlt_ptr;
-					return true;
+					trans_ptr->next = tail->next;
+					tail = trans_ptr;
 				}
+				else
+				{
+					trans_ptr = trans_ptr->next->next;
+				}
+				delete delete_ptr;
+				return;
 			}
+			trans_ptr = trans_ptr->next;
 		}
-		return false;
+		throw std::exception("no element found.");
 	}
 };

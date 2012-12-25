@@ -99,3 +99,11 @@ struct compare_bool_greater
 		}
 	}
 };
+template<typename type>
+struct hash_func
+{
+	int operator()(const type& t, unsigned int hash_size)
+	{
+		return t % hash_size;
+	}
+};
