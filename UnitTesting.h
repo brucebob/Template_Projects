@@ -22,8 +22,8 @@ private:
 
 public:
 	const testingClass& operator=(const testingClass& t);
-	bool operator<(int);
-	bool operator>(int);
+	inline bool operator<(int);
+	inline bool operator>(int);
 };
 namespace doublylinkedlist
 {
